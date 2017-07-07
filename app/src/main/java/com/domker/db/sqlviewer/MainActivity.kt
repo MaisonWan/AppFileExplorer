@@ -8,8 +8,12 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import com.domker.db.sqlviewer.helper.DbManager
+import com.domker.db.sqlviewer.helper.SQLHelper
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -29,6 +33,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+        testCreateDatabase()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadDataFiles()
     }
 
     override fun onBackPressed() {
@@ -60,6 +70,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_camera -> {
                 // Handle the camera action
+                Toast.makeText(this, "show database", Toast.LENGTH_SHORT).show()
             }
             R.id.nav_gallery -> {
 
@@ -80,5 +91,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun testCreateDatabase() {
+        (0..5).map { SQLHelper(this, "test_$it.db", null, 1) }
+                .forEach { it.readableDatabase.close() }
+    }
+
+    fun loadDataFiles() {
+        var files = StringBuffer()
+        DbManager.getDataFiles(this)
+//                .filter { it.endsWith(".db") }
+                .map { files.append(it.name); files.append("\n") }
+        text.text = files.toString()
     }
 }

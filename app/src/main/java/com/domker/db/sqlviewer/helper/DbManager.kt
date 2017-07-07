@@ -9,10 +9,14 @@ import java.io.FileFilter
  */
 class DbManager {
 
-    fun getDataFiles(context: Context): List<File> {
-        val file = File(context.filesDir.path)
-        return file.listFiles(FileFilter { it.endsWith(".db") }).asList()
-    }
+    companion object {
 
+        fun getDataFiles(context: Context): List<File> {
+            val list = context.databaseList()
+            val dbs = ArrayList<File>()
+            list.mapTo(dbs) { File(context.getDatabasePath(it).path) }
+            return dbs
+        }
+    }
 
 }
