@@ -16,9 +16,14 @@ import android.view.ViewGroup
 open abstract class BaseFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater!!.inflate(initLayoutId(), container)
+        val view = inflater!!.inflate(initLayoutId(), null)
         init(activity)
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        onShown(activity)
     }
 
     /**
@@ -26,6 +31,8 @@ open abstract class BaseFragment : Fragment() {
      * @param context
      */
     abstract fun init(context: Context)
+
+    abstract fun onShown(context: Context)
 
     /**
      * 回调布局

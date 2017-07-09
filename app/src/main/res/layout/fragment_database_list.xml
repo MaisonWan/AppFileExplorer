@@ -5,10 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/dbListView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dbRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="#ffff0000"
+        android:dividerHeight="2dp"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp" />
 
