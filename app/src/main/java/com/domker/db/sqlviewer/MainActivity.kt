@@ -1,15 +1,15 @@
 package com.domker.db.sqlviewer
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
-import android.widget.Toast
+import com.domker.db.sqlviewer.fragment.DataBaseListFragment
 import com.domker.db.sqlviewer.helper.DbManager
 import com.domker.db.sqlviewer.helper.SQLHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResume() {
         super.onResume()
-        loadDataFiles()
     }
 
     override fun onBackPressed() {
@@ -69,9 +68,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_camera -> {
-                // Handle the camera action
-                Toast.makeText(this, "show database", Toast.LENGTH_SHORT).show()
+            R.id.nav_database -> {
+                loadDataBaseListFragment()
             }
             R.id.nav_gallery -> {
 
@@ -99,12 +97,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 .forEach { it.readableDatabase.close() }
     }
 
-    fun loadDataFiles() {
-        val files = DbManager.getDataFiles(this)
-                .filter { it.name.endsWith(".db") }
-        val names = ArrayList<String>()
-        files.mapTo(names) { it.name }
-        val adapter = ArrayAdapter<String>(this, R.layout.list_item_layout, names)
-        dbListView.adapter = adapter
+    private fun loadDataBaseListFragment() {
+        val manager = fragmentManager.beginTransaction()
+        manager.add(R.id.fragment_content, DataBaseListFragment())
+        manager.commitAllowingStateLoss()
     }
 }
