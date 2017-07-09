@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.domker.db.sqlviewer.helper.DbManager
 import com.domker.db.sqlviewer.helper.SQLHelper
@@ -99,10 +100,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun loadDataFiles() {
-        var files = StringBuffer()
-        DbManager.getDataFiles(this)
-//                .filter { it.endsWith(".db") }
-                .map { files.append(it.name); files.append("\n") }
-        text.text = files.toString()
+        val files = DbManager.getDataFiles(this)
+                .filter { it.name.endsWith(".db") }
+        val names = ArrayList<String>()
+        files.mapTo(names) { it.name }
+        val adapter = ArrayAdapter<String>(this, R.layout.list_item_layout, names)
+        dbListView.adapter = adapter
     }
 }
