@@ -26,6 +26,7 @@ open abstract class BaseFragment : Fragment() {
         onShown(activity)
     }
 
+
     /**
      * 初始化回调
      * @param context

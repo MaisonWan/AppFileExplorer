@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import com.domker.db.sqlviewer.R
 import com.domker.db.sqlviewer.adapter.DataBaseListAdapter
+import com.domker.db.sqlviewer.annotation.FragmentShard
 import com.domker.db.sqlviewer.helper.DbManager
 import com.domker.db.sqlviewer.listener.OnItemClickLitener
 import kotlinx.android.synthetic.main.fragment_database_list.*
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_database_list.*
 /**
  * Created by Maison on 2017/7/9.
  */
+@FragmentShard(FragmentType.UNIT_TYPE_DATA_LIST)
 class DataBaseListFragment : BaseFragment() {
     override fun init(context: Context) {
         activity.title = "DataBase List"
@@ -27,8 +29,7 @@ class DataBaseListFragment : BaseFragment() {
     }
 
     fun loadDataFiles() {
-        val files = DbManager.getDataFiles(activity)
-                .filter { it.name.endsWith(".db") }
+        val files = DbManager.getDataFiles(activity).filter { it.name.endsWith(".db") }
         val names = ArrayList<String>()
         files.mapTo(names) { it.name }
         val adapter = DataBaseListAdapter(activity, names)
