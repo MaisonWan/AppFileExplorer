@@ -4,9 +4,9 @@ import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
+import com.domker.db.annotation.FragmentShard
 import com.domker.db.sqlviewer.R
 import com.domker.db.sqlviewer.adapter.DataBaseListAdapter
-import com.domker.db.sqlviewer.annotation.FragmentShard
 import com.domker.db.sqlviewer.helper.DbManager
 import com.domker.db.sqlviewer.listener.OnItemClickLitener
 import kotlinx.android.synthetic.main.fragment_database_list.*

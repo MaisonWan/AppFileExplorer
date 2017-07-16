@@ -1,4 +1,4 @@
-package com.domker.db.sqlviewer.annotation
+package com.domker.db.annotation
 
 /**
  * Fragment的注解，标识类型
