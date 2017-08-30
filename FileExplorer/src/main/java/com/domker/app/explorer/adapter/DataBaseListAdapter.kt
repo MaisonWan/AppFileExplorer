@@ -1,4 +1,4 @@
-package com.domker.db.sqlviewer.adapter
+package com.domker.app.explorer.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -6,14 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.domker.db.sqlviewer.R
-import com.domker.db.sqlviewer.listener.OnItemClickLitener
+import com.domker.app.explorer.R
+import com.domker.app.explorer.listener.OnItemClickListener
 
 /**
  * Created by Maison on 2017/7/10.
  */
-class DataBaseListAdapter(val context: Context, val data: List<String>) : RecyclerView.Adapter<DataBaseViewHolder>() {
-    var itemClickListener: OnItemClickLitener? = null
+class DataBaseListAdapter(private val context: Context, val data: List<String>) : RecyclerView.Adapter<DataBaseViewHolder>() {
+    var itemClickListener: OnItemClickListener? = null
         set(value) {
             field = value
         }

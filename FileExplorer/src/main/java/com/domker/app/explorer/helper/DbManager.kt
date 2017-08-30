@@ -1,8 +1,7 @@
-package com.domker.db.sqlviewer.helper
+package com.domker.app.explorer.helper
 
 import android.content.Context
 import java.io.File
-import java.io.FileFilter
 
 /**
  * Created by Maison on 2017/7/5.

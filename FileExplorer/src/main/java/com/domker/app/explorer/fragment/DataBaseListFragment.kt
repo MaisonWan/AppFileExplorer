@@ -1,21 +1,25 @@
-package com.domker.db.sqlviewer.fragment
+package com.domker.app.explorer.fragment
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Toast
-import com.domker.db.sqlviewer.R
-import com.domker.db.sqlviewer.adapter.DataBaseListAdapter
-import com.domker.db.sqlviewer.helper.DbManager
-import com.domker.db.sqlviewer.listener.OnItemClickLitener
-import kotlinx.android.synthetic.main.fragment_database_list.*
+import com.domker.app.explorer.R
+import com.domker.app.explorer.adapter.DataBaseListAdapter
+import com.domker.app.explorer.helper.DbManager
+import com.domker.app.explorer.listener.OnItemClickListener
 
 /**
  * Created by Maison on 2017/7/9.
  */
 class DataBaseListFragment : BaseFragment() {
-    override fun init(context: Context) {
+
+    private lateinit var dbRecyclerView: RecyclerView
+
+    override fun init(context: Context, view: View) {
         activity.title = "DataBase List"
+        dbRecyclerView = view.findViewById(R.id.dbRecyclerView)
     }
 
     override fun onShown(context: Context) {
@@ -26,13 +30,13 @@ class DataBaseListFragment : BaseFragment() {
         return R.layout.fragment_database_list
     }
 
-    fun loadDataFiles() {
+    private fun loadDataFiles() {
         val files = DbManager.getDataFiles(activity)
                 .filter { it.name.endsWith(".db") }
         val names = ArrayList<String>()
         files.mapTo(names) { it.name }
         val adapter = DataBaseListAdapter(activity, names)
-        adapter.itemClickListener = object: OnItemClickLitener {
+        adapter.itemClickListener = object: OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 Toast.makeText(activity, "On Click Item $position", Toast.LENGTH_SHORT).show()
             }

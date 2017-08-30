@@ -1,4 +1,4 @@
-package com.domker.db.sqlviewer.helper
+package com.domker.app.explorer.helper
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

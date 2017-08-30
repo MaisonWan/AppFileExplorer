@@ -1,4 +1,4 @@
-package com.domker.db.sqlviewer.fragment
+package com.domker.app.explorer.fragment
 
 import android.app.Fragment
 import android.content.Context
@@ -17,7 +17,7 @@ open abstract class BaseFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(initLayoutId(), null)
-        init(activity)
+        init(activity, view)
         return view
     }
 
@@ -30,7 +30,7 @@ open abstract class BaseFragment : Fragment() {
      * 初始化回调
      * @param context
      */
-    abstract fun init(context: Context)
+    abstract fun init(context: Context, view: View)
 
     abstract fun onShown(context: Context)
 

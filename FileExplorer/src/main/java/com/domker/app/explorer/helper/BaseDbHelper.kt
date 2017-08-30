@@ -1,4 +1,4 @@
-package com.domker.db.sqlviewer.helper
+package com.domker.app.explorer.helper
 
 /**
  * Created by Maison on 2017/7/5.

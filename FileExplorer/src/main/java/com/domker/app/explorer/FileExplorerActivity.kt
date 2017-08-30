@@ -1,36 +1,44 @@
-package com.domker.db.sqlviewer
+package com.domker.app.explorer
 
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import com.domker.db.sqlviewer.fragment.DataBaseListFragment
-import com.domker.db.sqlviewer.helper.SQLHelper
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
+import com.domker.app.explorer.fragment.DataBaseListFragment
+import com.domker.app.explorer.helper.SQLHelper
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private lateinit var toolbar: Toolbar
+    private lateinit var drawer_layout: DrawerLayout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.fe_activity_file_explorer)
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
 
+        drawer_layout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
-        nav_view.setNavigationItemSelectedListener(this)
+        findViewById<NavigationView>(R.id.nav_view).setNavigationItemSelectedListener(this)
         testCreateDatabase()
     }
 
@@ -89,7 +97,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    fun testCreateDatabase() {
+    private fun testCreateDatabase() {
         (0..5).map { SQLHelper(this, "test_$it.db", null, 1) }
                 .forEach { it.readableDatabase.close() }
     }

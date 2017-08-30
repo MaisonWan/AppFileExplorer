@@ -1,4 +1,4 @@
-package com.domker.db.sqlviewer.listener
+package com.domker.app.explorer.listener
 
 import android.view.View
 
@@ -6,7 +6,7 @@ import android.view.View
  * Created by Maison on 2017/7/10.
  */
 
-interface OnItemClickLitener {
+interface OnItemClickListener {
 
     fun onItemClick(view: View, position: Int)
 
