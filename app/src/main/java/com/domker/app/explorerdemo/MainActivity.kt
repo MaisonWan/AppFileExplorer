@@ -15,6 +15,7 @@ class MainActivity : Activity() {
 
         val intent = Intent(this, FileExplorerActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
 }

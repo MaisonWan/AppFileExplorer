@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import com.domker.app.explorer.R
 import com.domker.app.explorer.adapter.DataBaseListAdapter
+import com.domker.app.explorer.file.FileManager
 import com.domker.app.explorer.helper.DbManager
 import com.domker.app.explorer.listener.OnItemClickListener
 
@@ -16,10 +17,12 @@ import com.domker.app.explorer.listener.OnItemClickListener
 class DataBaseListFragment : BaseFragment() {
 
     private lateinit var dbRecyclerView: RecyclerView
+    private lateinit var fileManager: FileManager
 
     override fun init(context: Context, view: View) {
-        activity.title = "DataBase List"
+        activity.title = "文件浏览"
         dbRecyclerView = view.findViewById(R.id.dbRecyclerView)
+        fileManager = FileManager()
     }
 
     override fun onShown(context: Context) {
@@ -31,10 +34,13 @@ class DataBaseListFragment : BaseFragment() {
     }
 
     private fun loadDataFiles() {
-        val files = DbManager.getDataFiles(activity)
-                .filter { it.name.endsWith(".db") }
+//        val files = DbManager.getDataFiles(activity)
+//                .filter { it.name.endsWith(".db") }
+//        val names = ArrayList<String>()
+//        files.mapTo(names) { it.name }
+        val files = fileManager.getFileList(activity.filesDir.parent)
         val names = ArrayList<String>()
-        files.mapTo(names) { it.name }
+        files.mapTo(names) { it.file.name }
         val adapter = DataBaseListAdapter(activity, names)
         adapter.itemClickListener = object: OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {

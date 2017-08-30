@@ -39,7 +39,8 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         toggle.syncState()
 
         findViewById<NavigationView>(R.id.nav_view).setNavigationItemSelectedListener(this)
-        testCreateDatabase()
+//        testCreateDatabase()
+        loadDataBaseListFragment()
     }
 
     override fun onResume() {
@@ -64,14 +65,13 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_database -> {
                 loadDataBaseListFragment()
