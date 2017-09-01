@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">SQLViewer</string>
+    <string name="fe_app_name">SQLViewer</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="fe_navigation_drawer_open">Open navigation drawer</string>
+    <string name="fe_navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="fe_action_settings">Settings</string>
+    <string name="fe_back_toast">再按一次退出程序</string>
+
 </resources>
