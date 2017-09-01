@@ -11,6 +11,7 @@ import com.domker.app.explorer.R
 class AppInfoFragment : BaseFragment() {
 
     override fun init(context: Context, view: View) {
+        activity.title = getString(R.string.fe_title_app_info)
     }
 
     override fun onShown(context: Context) {

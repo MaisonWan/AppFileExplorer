@@ -18,11 +18,11 @@ import android.widget.TextView
 import android.widget.Toast
 import com.domker.app.explorer.fragment.AppInfoFragment
 import com.domker.app.explorer.fragment.DataBaseListFragment
+import com.domker.app.explorer.fragment.PhoneInfoFragment
 import com.domker.app.explorer.helper.SQLHelper
 import com.domker.app.explorer.hostapp.HostApp
 
 class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-
     private lateinit var mToolbar: Toolbar
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var mNavView: NavigationView
@@ -49,7 +49,8 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         }
 
         val toggle = ActionBarDrawerToggle(
-                this, mDrawerLayout, mToolbar, R.string.fe_navigation_drawer_open, R.string.fe_navigation_drawer_close)
+                this, mDrawerLayout, mToolbar, R.string.fe_navigation_drawer_open,
+                R.string.fe_navigation_drawer_close)
         mDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -105,11 +106,11 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             R.id.nav_app_info -> {
                 loadFragment(AppInfoFragment())
             }
-            R.id.nav_gallery -> {
+            R.id.nav_file_explorer -> {
                 loadFragment(DataBaseListFragment())
             }
-            R.id.nav_slideshow -> {
-
+            R.id.nav_phone_info -> {
+                loadFragment(PhoneInfoFragment())
             }
             R.id.nav_manage -> {
 

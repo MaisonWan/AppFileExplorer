@@ -5,17 +5,17 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_file_explorer"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/fe_title_files" />
+        <item
             android:id="@+id/nav_app_info"
             android:icon="@drawable/ic_menu_camera"
-            android:title="AppInfo" />
+            android:title="@string/fe_title_app_info" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_phone_info"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="@string/fe_title_phone_info" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
