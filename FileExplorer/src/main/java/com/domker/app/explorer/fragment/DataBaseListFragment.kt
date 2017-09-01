@@ -8,7 +8,6 @@ import android.widget.Toast
 import com.domker.app.explorer.R
 import com.domker.app.explorer.adapter.DataBaseListAdapter
 import com.domker.app.explorer.file.FileManager
-import com.domker.app.explorer.helper.DbManager
 import com.domker.app.explorer.listener.OnItemClickListener
 
 /**
@@ -30,7 +29,7 @@ class DataBaseListFragment : BaseFragment() {
     }
 
     override fun initLayoutId(): Int {
-        return R.layout.fragment_database_list
+        return R.layout.fe_fragment_database_list
     }
 
     private fun loadDataFiles() {

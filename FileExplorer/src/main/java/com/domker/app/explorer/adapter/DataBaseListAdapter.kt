@@ -36,7 +36,7 @@ class DataBaseListAdapter(private val context: Context, val data: List<String>) 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DataBaseViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.list_item_layout, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.fe_list_item_layout, parent, false)
         return DataBaseViewHolder(view)
     }
 

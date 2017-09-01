@@ -1,7 +1,6 @@
 package com.domker.app.explorer
 
 import android.app.Fragment
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
@@ -14,7 +13,6 @@ import android.support.v7.widget.Toolbar
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -108,7 +106,7 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
                 loadFragment(AppInfoFragment())
             }
             R.id.nav_gallery -> {
-
+                loadFragment(DataBaseListFragment())
             }
             R.id.nav_slideshow -> {
 
