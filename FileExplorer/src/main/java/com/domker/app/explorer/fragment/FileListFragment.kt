@@ -1,5 +1,6 @@
 package com.domker.app.explorer.fragment
 
+import android.Manifest
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -9,8 +10,11 @@ import android.widget.Toast
 import com.domker.app.explorer.R
 import com.domker.app.explorer.adapter.FileListAdapter
 import com.domker.app.explorer.adapter.ItemDivider
-import com.domker.app.explorer.file.FileManager
+import com.domker.app.explorer.file.FileInfo
+import com.domker.app.explorer.file.FileLoader
+import com.domker.app.explorer.helper.PermissionHelper
 import com.domker.app.explorer.listener.OnItemClickListener
+import com.domker.app.explorer.util.PhoneInfo
 import java.io.File
 
 /**
@@ -20,21 +24,28 @@ class FileListFragment : BaseFragment() {
     private lateinit var mTextViewPath: TextView
     private lateinit var mRecyclerViewFileList: RecyclerView
     private lateinit var mAdapter: FileListAdapter
-    private lateinit var fileManager: FileManager
-
+    private lateinit var mFileLoader: FileLoader
     private lateinit var mCurrentPath: String
+    // 完成接收的回调
+    private val mCallback = object : FileLoader.FileLoaderCallback {
+        override fun onReceiveResult(result: List<FileInfo>) {
+            mAdapter.setFileList(result)
+            mAdapter.notifyDataSetChanged()
+        }
+    }
 
     override fun init(context: Context, view: View) {
         activity.title = "文件浏览"
         mRecyclerViewFileList = view.findViewById(R.id.recyclerViewFiles)
         mTextViewPath = view.findViewById(R.id.textViewPath)
-        fileManager = FileManager()
         mRecyclerViewFileList.layoutManager = LinearLayoutManager(activity)
         initAdapter()
     }
 
     override fun onShown(context: Context) {
-        loadPathFiles(activity.filesDir.parent)
+        if (PermissionHelper(activity).check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            loadPathFiles(PhoneInfo(activity).getSdCardPath()!!)
+        }
     }
 
     override fun initLayoutId() = R.layout.fe_fragment_database_list
@@ -57,7 +68,12 @@ class FileListFragment : BaseFragment() {
         mAdapter.itemClickListener = object: OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val fileInfo = mAdapter.getFileInfoItem(position)
-                loadPathFiles(fileInfo.file.absolutePath)
+                if (fileInfo.isFile()) {
+                    // 如果是文件，则打开
+
+                } else {
+                    loadPathFiles(fileInfo.file.absolutePath)
+                }
             }
 
             override fun onItemLongClick(view: View, position: Int): Boolean {
@@ -73,8 +89,7 @@ class FileListFragment : BaseFragment() {
     private fun loadPathFiles(path: String) {
         mCurrentPath = path
         mTextViewPath.text = path
-        val files = fileManager.getFileList(path)
-        mAdapter.setFileList(files)
-        mAdapter.notifyDataSetChanged()
+        mFileLoader = FileLoader(mCallback)
+        mFileLoader.execute(path)
     }
 }

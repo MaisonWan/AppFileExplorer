@@ -9,15 +9,19 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.domker.app.explorer.R
 import com.domker.app.explorer.file.FileInfo
+import com.domker.app.explorer.file.FileManager
+import com.domker.app.explorer.file.FileType
+import com.domker.app.explorer.helper.IconLruCache
 import com.domker.app.explorer.listener.OnItemClickListener
 
 /**
  * 显示文件列表
  * Created by Maison on 2017/7/10.
  */
-class FileListAdapter(context: Context) : RecyclerView.Adapter<FileInfoViewHolder>() {
+class FileListAdapter(val context: Context) : RecyclerView.Adapter<FileInfoViewHolder>() {
     private val fileInfoList: ArrayList<FileInfo> = ArrayList()
     private var mLayoutInflater: LayoutInflater = LayoutInflater.from(context)
+    private val mIconCache: IconLruCache = IconLruCache(context)
 
     var itemClickListener: OnItemClickListener? = null
         set(value) {
@@ -28,7 +32,14 @@ class FileListAdapter(context: Context) : RecyclerView.Adapter<FileInfoViewHolde
         val info = fileInfoList[position]
         if (holder != null) {
             holder.textViewName.text = info.file.name
-            holder.textViewDate.text = info.getFileDate()
+            if (info.isFile()) {
+                holder.textViewDate.text = info.getFileDate() + "  " + info.getFileSize(context)
+                holder.imageViewDirection.visibility = View.GONE
+            } else {
+                holder.textViewDate.text = info.getFileDate()
+                holder.imageViewDirection.visibility = View.VISIBLE
+            }
+            holder.imageViewFileType.setImageDrawable(mIconCache.getDrawable(info))
             holder.itemView.setOnClickListener {
                 itemClickListener?.onItemClick(holder.itemView, position)
             }
@@ -65,4 +76,5 @@ class FileInfoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val textViewName: TextView = view.findViewById(R.id.textViewName)
     val textViewDate: TextView = view.findViewById(R.id.textViewDate)
     val imageViewFileType: ImageView = view.findViewById(R.id.imageViewFileType)
+    val imageViewDirection: ImageView = view.findViewById(R.id.imageViewDirection)
 }

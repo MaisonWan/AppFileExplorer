@@ -31,8 +31,8 @@ class PhoneInfoFragment : BaseFragment() {
     override fun onShown(context: Context) {
         if (permissionHelper.check(Manifest.permission.READ_PHONE_STATE)) {
             initData(context)
-            mListView.adapter = mAdapter
         }
+        mListView.adapter = mAdapter
     }
 
     override fun initLayoutId(): Int = R.layout.fe_phone_info_layout
