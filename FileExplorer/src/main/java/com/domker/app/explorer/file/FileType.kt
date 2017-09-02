@@ -4,7 +4,7 @@ package com.domker.app.explorer.file
  * Created by wanlipeng on 2017/9/3.
  */
 enum class FileType {
-    TYPE_DIRECTORY, TYPE_IMAGE;
+    TYPE_DIRECTORY, TYPE_IMAGE, TYPE_VIDEO, TYPE_APK, UNKNOWN;
 
     companion object {
         /**
@@ -14,7 +14,15 @@ enum class FileType {
             if (fileInfo.file.isDirectory) {
                 return TYPE_DIRECTORY
             }
-            return TYPE_DIRECTORY
+            val fileName = fileInfo.fileName
+            val index = fileName.lastIndexOf(".")
+            val prefix = if (index == -1) "" else fileName.substring(index + 1)
+            return when (prefix.toLowerCase()) {
+                "jpg", "jpeg", "png", "bmp" -> TYPE_IMAGE
+                "apk" -> TYPE_APK
+                "mp4" -> TYPE_VIDEO
+                else -> UNKNOWN
+            }
         }
 
         /**

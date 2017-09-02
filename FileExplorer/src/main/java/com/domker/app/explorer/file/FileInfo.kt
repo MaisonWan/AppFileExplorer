@@ -20,6 +20,18 @@ data class FileInfo(val file: File) {
         get() = FileType.getFileType(this)
 
     /**
+     * 文件路径
+     */
+    val filePath: String
+        get() = file.absolutePath
+
+    /**
+     * 文件名称
+     */
+    val fileName: String
+        get() = file.name
+
+    /**
      * 获取文件的时间
      */
     fun getFileDate() = formatter.format(Date(file.lastModified()))!!

@@ -12,6 +12,7 @@ import com.domker.app.explorer.adapter.FileListAdapter
 import com.domker.app.explorer.adapter.ItemDivider
 import com.domker.app.explorer.file.FileInfo
 import com.domker.app.explorer.file.FileLoader
+import com.domker.app.explorer.file.FileOpen
 import com.domker.app.explorer.helper.PermissionHelper
 import com.domker.app.explorer.listener.OnItemClickListener
 import com.domker.app.explorer.util.PhoneInfo
@@ -70,7 +71,7 @@ class FileListFragment : BaseFragment() {
                 val fileInfo = mAdapter.getFileInfoItem(position)
                 if (fileInfo.isFile()) {
                     // 如果是文件，则打开
-
+                    FileOpen.openFile(activity, fileInfo)
                 } else {
                     loadPathFiles(fileInfo.file.absolutePath)
                 }
