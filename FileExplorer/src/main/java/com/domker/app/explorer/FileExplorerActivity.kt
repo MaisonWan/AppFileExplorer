@@ -15,10 +15,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.domker.app.explorer.fragment.AppInfoFragment
-import com.domker.app.explorer.fragment.DataBaseListFragment
+import com.domker.app.explorer.fragment.FileListFragment
 import com.domker.app.explorer.fragment.PhoneInfoFragment
+import com.domker.app.explorer.helper.KeyPressHelper
 import com.domker.app.explorer.helper.SQLHelper
 import com.domker.app.explorer.hostapp.HostApp
 
@@ -30,7 +30,7 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     private lateinit var mAppName: TextView
     private lateinit var mPackageName: TextView
 
-    private var exitTime: Long = 0
+    private lateinit var mBackPressHelper: KeyPressHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +38,7 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         initViews()
         setSupportActionBar(mToolbar)
         initListener()
-        loadFragment(AppInfoFragment())
+        loadFragment(FileListFragment())
     }
 
     private fun initListener() {
@@ -55,6 +55,7 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         toggle.syncState()
 
         mNavView.setNavigationItemSelectedListener(this)
+        mBackPressHelper = KeyPressHelper(this)
     }
 
     private fun initViews() {
@@ -78,17 +79,12 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             mDrawerLayout.closeDrawer(GravityCompat.START)
             return true
         }
-        if (keyCode == KeyEvent.KEYCODE_BACK && event!!.repeatCount == 0) {
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(this, R.string.fe_back_toast, Toast.LENGTH_SHORT).show()
-                exitTime = System.currentTimeMillis()
-                return true
-            } else {
-                finish()
-            }
+        if (mBackPressHelper.onKeyPressed(keyCode, event)) {
+            return true
         }
         return super.onKeyDown(keyCode, event)
     }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
@@ -107,7 +103,7 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
                 loadFragment(AppInfoFragment())
             }
             R.id.nav_file_explorer -> {
-                loadFragment(DataBaseListFragment())
+                loadFragment(FileListFragment())
             }
             R.id.nav_phone_info -> {
                 loadFragment(PhoneInfoFragment())

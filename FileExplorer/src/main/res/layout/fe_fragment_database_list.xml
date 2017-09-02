@@ -5,12 +5,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/textViewPath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
+        android:padding="5dp" />
+
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/dbRecyclerView"
+        android:id="@+id/recyclerViewFiles"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="#ffff0000"
         android:dividerHeight="2dp"
+        android:background="@drawable/recycler_bg"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp" />
 

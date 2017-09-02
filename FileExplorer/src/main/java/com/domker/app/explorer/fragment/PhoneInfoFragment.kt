@@ -37,6 +37,8 @@ class PhoneInfoFragment : BaseFragment() {
 
     override fun initLayoutId(): Int = R.layout.fe_phone_info_layout
 
+    override fun onBackPressed(): Boolean = false
+
     /**
      * 初始化设备信息
      */

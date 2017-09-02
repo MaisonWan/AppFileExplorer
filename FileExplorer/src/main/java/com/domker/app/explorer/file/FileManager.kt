@@ -3,6 +3,7 @@ package com.domker.app.explorer.file
 import java.io.File
 
 /**
+ * 封装文件相关操作的类
  * Created by Maison on 2017/8/31.
  */
 class FileManager {
@@ -20,5 +21,12 @@ class FileManager {
             }
         }
         return fileList
+    }
+
+    /**
+     * 获取该目录下的文件信息
+     */
+    fun getFileList(file: File): List<FileInfo> {
+        return getFileList(file.absolutePath)
     }
 }
