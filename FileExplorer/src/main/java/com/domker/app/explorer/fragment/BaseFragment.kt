@@ -38,4 +38,9 @@ open abstract class BaseFragment : Fragment() {
      * 回调布局
      */
     abstract fun initLayoutId(): Int
+
+    /**
+     * 按下back按键
+     */
+    abstract fun onBackPressed(): Boolean
 }
