@@ -5,7 +5,7 @@ import android.app.FragmentManager
 import android.view.KeyEvent
 import android.widget.Toast
 import com.domker.app.explorer.R
-import com.domker.app.explorer.fragment.BaseFragment
+import com.domker.app.explorer.fragment.IActionFragment
 
 /**
  * Created by wanlipeng on 2017/9/2.
@@ -39,7 +39,7 @@ class KeyPressHelper(val activity: Activity) {
      * 调用当前fragment中，如何处理返回按键
      */
     private fun onFragmentBackPressed(): Boolean {
-        val currentFragment = fragmentManager.findFragmentById(R.id.fragment_content) as BaseFragment
+        val currentFragment = fragmentManager.findFragmentById(R.id.fragment_content) as IActionFragment
         return currentFragment.onBackPressed()
     }
 }

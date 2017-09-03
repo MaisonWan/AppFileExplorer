@@ -2,12 +2,29 @@
     <string name="fe_navigation_drawer_open">Open navigation drawer</string>
     <string name="fe_navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="fe_action_settings">Settings</string>
     <string name="fe_back_toast">再按一次退出程序</string>
 
     <string name="fe_title_files">Files</string>
     <string name="fe_title_app_info">AppInfo</string>
     <string name="fe_title_phone_info">PhoneInfo</string>
+    <string name="fe_action_settings">Settings</string>
 
+    <string name="fe_settings_category_show">显示</string>
+    <string name="fe_settings_record_last_path_title">记录上次文件位置</string>
+    <string name="fe_settings_record_last_path_summary">记录上次浏览的文件系统路径</string>
+    <string name="fe_settings_sort_dialog_title">选择排序方式</string>
+    <string name="fe_settings_sort_title">排序方式</string>
+    <string name="fe_settings_sort_summary">文件排序方式</string>
+    <string name="fe_settings_sort_default_value">0</string>
 
+    <string-array name="file_sort_name">
+        <item>按名称</item>
+        <item>按大小</item>
+        <item>按时间</item>
+    </string-array>
+    <string-array name="file_sort_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

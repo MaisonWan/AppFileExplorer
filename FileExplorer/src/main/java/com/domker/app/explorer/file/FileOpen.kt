@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import java.io.File
 
-
 /**
  * Created by wanlipeng on 2017/9/3.
  */
@@ -17,6 +16,7 @@ object FileOpen {
     fun openFile(context: Context, fileInfo: FileInfo) {
         val path = fileInfo.filePath
         val intent = when (fileInfo.fileType) {
+            FileType.TYPE_TEXT -> getTextFileIntent(path, true)
             FileType.TYPE_IMAGE -> getImageFileIntent(path)
             FileType.TYPE_APK -> getApkFileIntent(path)
             FileType.TYPE_VIDEO -> getVideoFileIntent(path)
@@ -38,8 +38,10 @@ object FileOpen {
         return intent
     }
 
-    //android获取一个用于打开图片文件的intent
-    fun getImageFileIntent(param: String): Intent {
+    /**
+     * android获取一个用于打开图片文件的intent
+     */
+    private fun getImageFileIntent(param: String): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addCategory(Intent.CATEGORY_DEFAULT)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -48,7 +50,9 @@ object FileOpen {
         return intent
     }
 
-    //android获取一个用于打开PDF文件的intent
+    /**
+     * android获取一个用于打开PDF文件的intent
+     */
     fun getPdfFileIntent(param: String): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addCategory(Intent.CATEGORY_DEFAULT)
@@ -58,17 +62,17 @@ object FileOpen {
         return intent
     }
 
-    //android获取一个用于打开文本文件的intent
-    fun getTextFileIntent(param: String, paramBoolean: Boolean): Intent {
+    /**
+     * android获取一个用于打开文本文件的intent
+     */
+    private fun getTextFileIntent(param: String, isUri: Boolean): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addCategory(Intent.CATEGORY_DEFAULT)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        if (paramBoolean) {
-            val uri1 = Uri.parse(param)
-            intent.setDataAndType(uri1, "text/plain")
+        if (isUri) {
+            intent.setDataAndType(Uri.parse(param), "text/plain")
         } else {
-            val uri2 = Uri.fromFile(File(param))
-            intent.setDataAndType(uri2, "text/plain")
+            intent.setDataAndType(Uri.fromFile(File(param)), "text/plain")
         }
         return intent
     }
@@ -89,7 +93,7 @@ object FileOpen {
     /**
      * android获取一个用于打开视频文件的intent
      */
-    fun getVideoFileIntent(param: String): Intent {
+    private fun getVideoFileIntent(param: String): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra("oneshot", 0)
@@ -150,7 +154,7 @@ object FileOpen {
     /**
      * 获取安装apk文件的intent
      */
-    fun getApkFileIntent(param: String): Intent {
+    private fun getApkFileIntent(param: String): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addCategory(Intent.CATEGORY_DEFAULT)
         intent.setDataAndType(Uri.fromFile(File(param)),

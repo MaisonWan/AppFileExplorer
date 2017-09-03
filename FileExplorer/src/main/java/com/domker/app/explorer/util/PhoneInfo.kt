@@ -126,12 +126,6 @@ class PhoneInfo constructor(context: Context) {
         return String.format("%f * %f", dm.xdpi, dm.ydpi)
     }
 
-    fun getSdCardPath(): String? {
-        return if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-            Environment.getExternalStorageDirectory().toString()
-        } else null
-    }
-
     /**
      * 获取android当前可用内存大小,将获取的内存大小规格化
      */
@@ -167,5 +161,16 @@ class PhoneInfo constructor(context: Context) {
         } catch (e: IOException) {
         }
         return Formatter.formatFileSize(mContext, initial_memory)
+    }
+
+    companion object {
+        /**
+         * 获取sd卡路径
+         */
+        fun getSdCardPath(): String? {
+            return if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+                Environment.getExternalStorageDirectory().toString()
+            } else null
+        }
     }
 }

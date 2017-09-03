@@ -50,7 +50,7 @@ class IconLruCache(val context: Context) {
             return FileManager.getApkIcon(context, fileInfo.file.absolutePath)!!
         }
         return when (fileInfo.fileType) {
-            FileType.TYPE_DIRECTORY -> getResDrawable(R.drawable.ic_menu_gallery)
+            FileType.TYPE_DIRECTORY -> getResDrawable(R.drawable.fe_ic_folder_black)
             else -> getResDrawable(R.drawable.ic_menu_camera)
         }
     }

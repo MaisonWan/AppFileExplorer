@@ -1,7 +1,6 @@
 package com.domker.app.explorer.fragment
 
 import android.app.Fragment
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,7 @@ import android.view.ViewGroup
  * Created by Maison on 2017/7/9.
  */
 
-open abstract class BaseFragment : Fragment() {
+open abstract class BaseFragment : Fragment(), IActionFragment {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(initLayoutId(), null)
@@ -26,21 +25,4 @@ open abstract class BaseFragment : Fragment() {
         onShown(activity)
     }
 
-    /**
-     * 初始化回调
-     * @param context
-     */
-    abstract fun init(context: Context, view: View)
-
-    abstract fun onShown(context: Context)
-
-    /**
-     * 回调布局
-     */
-    abstract fun initLayoutId(): Int
-
-    /**
-     * 按下back按键
-     */
-    abstract fun onBackPressed(): Boolean
 }

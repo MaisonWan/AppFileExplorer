@@ -22,7 +22,7 @@ class FileManager {
         val fileList = ArrayList<FileInfo>()
         val dir = File(path)
         if (dir.isDirectory) {
-            dir.listFiles().forEach {
+            dir.listFiles()?.forEach {
                 val fileInfo = FileInfo(it)
                 fileList.add(fileInfo)
             }

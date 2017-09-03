@@ -1,6 +1,7 @@
 package com.domker.app.explorer.adapter
 
 import android.content.Context
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.domker.app.explorer.R
 import com.domker.app.explorer.file.FileInfo
-import com.domker.app.explorer.file.FileManager
-import com.domker.app.explorer.file.FileType
 import com.domker.app.explorer.helper.IconLruCache
 import com.domker.app.explorer.listener.OnItemClickListener
 
@@ -22,6 +21,8 @@ class FileListAdapter(val context: Context) : RecyclerView.Adapter<FileInfoViewH
     private val fileInfoList: ArrayList<FileInfo> = ArrayList()
     private var mLayoutInflater: LayoutInflater = LayoutInflater.from(context)
     private val mIconCache: IconLruCache = IconLruCache(context)
+
+    private val mPositionMap: MutableMap<String, Int> = HashMap()
 
     var itemClickListener: OnItemClickListener? = null
         set(value) {
@@ -69,6 +70,21 @@ class FileListAdapter(val context: Context) : RecyclerView.Adapter<FileInfoViewH
      */
     fun getFileInfoItem(position: Int): FileInfo {
         return fileInfoList[position]
+    }
+
+    /**
+     * 记录当前滑动的位置
+     */
+    fun recordPosition(path: String, layoutManager: LinearLayoutManager) {
+        val position = layoutManager.findFirstCompletelyVisibleItemPosition()
+        mPositionMap.put(path, position)
+    }
+
+    /**
+     * 获取当前存储的位置
+     */
+    fun getRecordPosition(path: String): Int {
+        return mPositionMap[path] ?: 0
     }
 }
 

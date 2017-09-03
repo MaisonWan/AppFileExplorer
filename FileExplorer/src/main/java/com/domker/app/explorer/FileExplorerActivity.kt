@@ -18,6 +18,7 @@ import android.widget.TextView
 import com.domker.app.explorer.fragment.AppInfoFragment
 import com.domker.app.explorer.fragment.FileListFragment
 import com.domker.app.explorer.fragment.PhoneInfoFragment
+import com.domker.app.explorer.fragment.SettingsFragment
 import com.domker.app.explorer.helper.KeyPressHelper
 import com.domker.app.explorer.helper.SQLHelper
 import com.domker.app.explorer.hostapp.HostApp
@@ -108,8 +109,8 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             R.id.nav_phone_info -> {
                 loadFragment(PhoneInfoFragment())
             }
-            R.id.nav_manage -> {
-
+            R.id.nav_settings -> {
+                loadFragment(SettingsFragment())
             }
             R.id.nav_share -> {
 

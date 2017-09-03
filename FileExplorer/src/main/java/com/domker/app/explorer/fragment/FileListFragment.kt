@@ -14,8 +14,8 @@ import com.domker.app.explorer.file.FileInfo
 import com.domker.app.explorer.file.FileLoader
 import com.domker.app.explorer.file.FileOpen
 import com.domker.app.explorer.helper.PermissionHelper
+import com.domker.app.explorer.helper.SharedPreferencesHelper
 import com.domker.app.explorer.listener.OnItemClickListener
-import com.domker.app.explorer.util.PhoneInfo
 import java.io.File
 
 /**
@@ -24,39 +24,53 @@ import java.io.File
 class FileListFragment : BaseFragment() {
     private lateinit var mTextViewPath: TextView
     private lateinit var mRecyclerViewFileList: RecyclerView
+    private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var mAdapter: FileListAdapter
     private lateinit var mFileLoader: FileLoader
-    private lateinit var mCurrentPath: String
+    private lateinit var mSpHepler: SharedPreferencesHelper
+    private var mCurrentPath: String? = null
+
     // 完成接收的回调
     private val mCallback = object : FileLoader.FileLoaderCallback {
         override fun onReceiveResult(result: List<FileInfo>) {
             mAdapter.setFileList(result)
             mAdapter.notifyDataSetChanged()
+            // 还原位置
+            val position = mAdapter.getRecordPosition(mCurrentPath!!)
+            mLayoutManager.scrollToPosition(position)
         }
     }
+
 
     override fun init(context: Context, view: View) {
         activity.title = "文件浏览"
         mRecyclerViewFileList = view.findViewById(R.id.recyclerViewFiles)
         mTextViewPath = view.findViewById(R.id.textViewPath)
-        mRecyclerViewFileList.layoutManager = LinearLayoutManager(activity)
+        mLayoutManager = LinearLayoutManager(activity)
+        mRecyclerViewFileList.layoutManager = mLayoutManager
+        mSpHepler = SharedPreferencesHelper(activity)
         initAdapter()
     }
 
     override fun onShown(context: Context) {
         if (PermissionHelper(activity).check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            loadPathFiles(PhoneInfo(activity).getSdCardPath()!!)
+            loadPathFiles(mSpHepler.getDefaultPath())
         }
     }
 
     override fun initLayoutId() = R.layout.fe_fragment_database_list
 
     override fun onBackPressed(): Boolean {
-        if (mCurrentPath == activity.filesDir.parent) {
+        if (mCurrentPath == "/") {
             return false
         }
-        loadPathFiles(File(mCurrentPath).parent);
+        loadPathFiles(File(mCurrentPath).parent)
         return true
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mSpHepler.saveDefaultPath(mCurrentPath!!)
     }
 
     /**
@@ -88,6 +102,10 @@ class FileListFragment : BaseFragment() {
      * 加载指定路径下的文件
      */
     private fun loadPathFiles(path: String) {
+        // 跳转之前，记录位置
+        if (mCurrentPath != null) {
+            mAdapter.recordPosition(mCurrentPath!!, mLayoutManager)
+        }
         mCurrentPath = path
         mTextViewPath.text = path
         mFileLoader = FileLoader(mCallback)
