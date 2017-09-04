@@ -1,5 +1,6 @@
 package com.domker.app.explorer
 
+import android.app.Fragment
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
@@ -9,62 +10,88 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
-import com.domker.app.explorer.fragment.DataBaseListFragment
+import android.widget.ImageView
+import android.widget.TextView
+import com.domker.app.explorer.fragment.AppInfoFragment
+import com.domker.app.explorer.fragment.FileListFragment
+import com.domker.app.explorer.fragment.PhoneInfoFragment
+import com.domker.app.explorer.fragment.SettingsFragment
+import com.domker.app.explorer.helper.KeyPressHelper
 import com.domker.app.explorer.helper.SQLHelper
+import com.domker.app.explorer.hostapp.HostApp
 
 class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private lateinit var mToolbar: Toolbar
+    private lateinit var mDrawerLayout: DrawerLayout
+    private lateinit var mNavView: NavigationView
+    private lateinit var mAppIcon: ImageView
+    private lateinit var mAppName: TextView
+    private lateinit var mPackageName: TextView
 
-    private lateinit var toolbar: Toolbar
-    private lateinit var drawer_layout: DrawerLayout
-
+    private lateinit var mBackPressHelper: KeyPressHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fe_activity_file_explorer)
-        toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        initViews()
+        setSupportActionBar(mToolbar)
+        initListener()
+        loadFragment(FileListFragment())
+    }
 
+    private fun initListener() {
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "测试按钮，没有功能", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
 
-        drawer_layout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer_layout.addDrawerListener(toggle)
+                this, mDrawerLayout, mToolbar, R.string.fe_navigation_drawer_open,
+                R.string.fe_navigation_drawer_close)
+        mDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        findViewById<NavigationView>(R.id.nav_view).setNavigationItemSelectedListener(this)
-//        testCreateDatabase()
-        loadDataBaseListFragment()
+        mNavView.setNavigationItemSelectedListener(this)
+        mBackPressHelper = KeyPressHelper(this)
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun initViews() {
+        mToolbar = findViewById(R.id.toolbar)
+        mDrawerLayout = findViewById(R.id.drawer_layout)
+        mNavView = findViewById(R.id.nav_view)
+        val headerView = mNavView.getHeaderView(0)
+
+        mAppIcon = headerView.findViewById(R.id.imageViewIcon)
+        mAppName = headerView.findViewById(R.id.textViewAppName)
+        mPackageName = headerView.findViewById(R.id.textViewPackage)
+
+        mAppIcon.setImageDrawable(HostApp.getHostAppIcon(this))
+        mAppName.text = HostApp.getHostAppName(baseContext)
+        mPackageName.text = HostApp.getHostAppPackage(baseContext)
     }
 
-    override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        // 抽屉打开的时候优先关闭
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START)
+            return true
         }
+        if (mBackPressHelper.onKeyPressed(keyCode, event)) {
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
@@ -73,17 +100,17 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_database -> {
-                loadDataBaseListFragment()
+            R.id.nav_app_info -> {
+                loadFragment(AppInfoFragment())
             }
-            R.id.nav_gallery -> {
-
+            R.id.nav_file_explorer -> {
+                loadFragment(FileListFragment())
             }
-            R.id.nav_slideshow -> {
-
+            R.id.nav_phone_info -> {
+                loadFragment(PhoneInfoFragment())
             }
-            R.id.nav_manage -> {
-
+            R.id.nav_settings -> {
+                loadFragment(SettingsFragment())
             }
             R.id.nav_share -> {
 
@@ -93,7 +120,7 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             }
         }
 
-        drawer_layout.closeDrawer(GravityCompat.START)
+        mDrawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -102,9 +129,9 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
                 .forEach { it.readableDatabase.close() }
     }
 
-    private fun loadDataBaseListFragment() {
+    private fun loadFragment(fragment: Fragment) {
         val manager = fragmentManager.beginTransaction()
-        manager.replace(R.id.fragment_content, DataBaseListFragment())
+        manager.replace(R.id.fragment_content, fragment)
         manager.commitAllowingStateLoss()
     }
 }

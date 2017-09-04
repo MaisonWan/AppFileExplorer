@@ -1,2 +1,2 @@
-# SQLViewer
-Android SQLIte Viewer
+#AppFileExplorer
+App Private File Explorer for developer.

@@ -1,0 +1,21 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <PreferenceCategory android:title="@string/fe_settings_category_show">
+
+        <CheckBoxPreference
+            android:key="key_record_last_path"
+            android:summary="@string/fe_settings_record_last_path_summary"
+            android:title="@string/fe_settings_record_last_path_title" />
+
+        <ListPreference
+            android:defaultValue="@string/fe_settings_sort_default_value"
+            android:dialogTitle="@string/fe_settings_sort_title"
+            android:entries="@array/file_sort_name"
+            android:entryValues="@array/file_sort_value"
+            android:key="key_file_sort_type"
+            android:summary="@string/fe_settings_sort_summary"
+            android:title="@string/fe_settings_sort_title" />
+    </PreferenceCategory>
+</PreferenceScreen>
