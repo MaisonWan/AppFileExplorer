@@ -37,6 +37,7 @@ class PhoneInfoFragment : BaseFragment() {
     override fun onAssistButtonClick(view: View) {
         initData(activity)
         mAdapter.notifyDataSetChanged()
+        mListView.smoothScrollToPosition(0)
     }
 
     override fun onShown(context: Context) {

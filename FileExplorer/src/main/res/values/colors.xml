@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="fe_colorPrimary">#3F51B5</color>
-    <color name="fe_colorPrimaryDark">#303F9F</color>
-    <color name="fe_colorAccent">#EEEEEE</color>
+    <color name="fe_colorPrimary">#13adf2</color>
+    <color name="fe_colorPrimaryDark">#0c8ff8</color>
+    <color name="fe_colorAccent">#03a9f4</color>
 </resources>

@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="FEAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/fe_colorPrimary</item>
+        <item name="colorPrimary">@color/fe_colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/fe_colorPrimaryDark</item>
         <item name="colorAccent">@color/fe_colorAccent</item>
     </style>

@@ -5,4 +5,13 @@
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="FEAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/fe_colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/fe_colorPrimaryDark</item>
+        <item name="colorAccent">@color/fe_colorAccent</item>
+        <item name="android:navigationBarColor">@color/fe_colorPrimaryDark</item>
+        <item name="android:statusBarColor">?android:attr/colorPrimary</item>
+    </style>
 </resources>
