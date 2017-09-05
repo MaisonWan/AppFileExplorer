@@ -80,7 +80,9 @@ class FileListFragment : BaseFragment() {
 
     override fun onStop() {
         super.onStop()
-        mSpHepler.saveDefaultPath(mCurrentPath!!)
+        if (settings.isRecordLastPath()) {
+            mSpHepler.saveDefaultPath(mCurrentPath!!)
+        }
     }
 
     /**
@@ -119,6 +121,7 @@ class FileListFragment : BaseFragment() {
         mCurrentPath = path
         mTextViewPath.text = path
         mFileLoader = FileLoader(mCallback)
+        mFileLoader.fileSortType = settings.getFileSortType()
         mFileLoader.execute(path)
     }
 }
