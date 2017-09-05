@@ -2,6 +2,7 @@ package com.domker.app.explorer.fragment
 
 import android.Manifest
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -16,6 +17,7 @@ import com.domker.app.explorer.file.FileOpen
 import com.domker.app.explorer.helper.PermissionHelper
 import com.domker.app.explorer.helper.SharedPreferencesHelper
 import com.domker.app.explorer.listener.OnItemClickListener
+import com.domker.app.explorer.util.DrawableUtils
 import java.io.File
 
 /**
@@ -50,6 +52,14 @@ class FileListFragment : BaseFragment() {
         mRecyclerViewFileList.layoutManager = mLayoutManager
         mSpHepler = SharedPreferencesHelper(activity)
         initAdapter()
+    }
+
+    override fun initAssistButtonDrawable(context: Context): Drawable? {
+        return DrawableUtils.getDrawable(context, R.drawable.fe_ic_arrow_upward_black)
+    }
+
+    override fun onAssistButtonClick(view: View) {
+        mRecyclerViewFileList.smoothScrollToPosition(0)
     }
 
     override fun onShown(context: Context) {

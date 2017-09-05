@@ -1,6 +1,7 @@
 package com.domker.app.explorer.fragment
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.preference.ListPreference
 import android.preference.Preference
@@ -36,12 +37,18 @@ class SettingsFragment : PreferenceFragment(), IActionFragment {
         val defaultValue = getString(R.string.fe_settings_sort_default_value)
         val value = preferenceManager.sharedPreferences.getString(SORT_KEY, defaultValue)
         val names = resources.getStringArray(R.array.file_sort_name)
-        val index = mListPreference.findIndexOfValue(value)
+        val index = Math.max(mListPreference.findIndexOfValue(value), 0) // 防止找不到-1越界
         mListPreference.summary = names[index]
     }
 
     override fun init(context: Context, view: View) {
 
+    }
+
+    override fun initAssistButtonDrawable(context: Context): Drawable? = null
+
+    override fun onAssistButtonClick(view: View) {
+        // ignore
     }
 
     override fun onShown(context: Context) {

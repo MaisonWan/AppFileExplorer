@@ -13,17 +13,19 @@ import android.support.v7.widget.Toolbar
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.domker.app.explorer.fragment.AppInfoFragment
-import com.domker.app.explorer.fragment.FileListFragment
-import com.domker.app.explorer.fragment.PhoneInfoFragment
-import com.domker.app.explorer.fragment.SettingsFragment
+import com.domker.app.explorer.fragment.*
 import com.domker.app.explorer.helper.KeyPressHelper
 import com.domker.app.explorer.helper.SQLHelper
 import com.domker.app.explorer.hostapp.HostApp
 
+/**
+ * 查看文件和app信息，机型信息的总入口
+ */
 class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private lateinit var mFab: FloatingActionButton
     private lateinit var mToolbar: Toolbar
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var mNavView: NavigationView
@@ -43,12 +45,6 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     }
 
     private fun initListener() {
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "测试按钮，没有功能", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
-
         val toggle = ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.fe_navigation_drawer_open,
                 R.string.fe_navigation_drawer_close)
@@ -57,9 +53,14 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
         mNavView.setNavigationItemSelectedListener(this)
         mBackPressHelper = KeyPressHelper(this)
+        mFab.setOnClickListener { view ->
+            val currentFragment = fragmentManager.findFragmentById(R.id.fragment_content) as IActionFragment
+            currentFragment?.onAssistButtonClick(view)
+        }
     }
 
     private fun initViews() {
+        mFab = findViewById(R.id.fab)
         mToolbar = findViewById(R.id.toolbar)
         mDrawerLayout = findViewById(R.id.drawer_layout)
         mNavView = findViewById(R.id.nav_view)
@@ -72,6 +73,16 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         mAppIcon.setImageDrawable(HostApp.getHostAppIcon(this))
         mAppName.text = HostApp.getHostAppName(baseContext)
         mPackageName.text = HostApp.getHostAppPackage(baseContext)
+    }
+
+    private fun initAssistButton(fragment: IActionFragment) {
+        val drawable = fragment.initAssistButtonDrawable(this)
+        if (drawable != null) {
+            mFab.visibility = View.VISIBLE
+            mFab.setImageDrawable(drawable)
+        } else {
+            mFab.visibility = View.GONE
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -133,5 +144,7 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         val manager = fragmentManager.beginTransaction()
         manager.replace(R.id.fragment_content, fragment)
         manager.commitAllowingStateLoss()
+        // 初始化按钮的显示
+        initAssistButton(fragment as IActionFragment)
     }
 }

@@ -1,6 +1,7 @@
 package com.domker.app.explorer.fragment
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.View
 import com.domker.app.explorer.R
 
@@ -11,6 +12,14 @@ import com.domker.app.explorer.R
 class AppInfoFragment : BaseFragment() {
     override fun init(context: Context, view: View) {
         activity.title = getString(R.string.fe_title_app_info)
+    }
+
+    override fun initAssistButtonDrawable(context: Context): Drawable? {
+        return null
+    }
+
+    override fun onAssistButtonClick(view: View) {
+
     }
 
     override fun onShown(context: Context) {
