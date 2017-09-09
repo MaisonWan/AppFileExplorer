@@ -32,7 +32,7 @@ class FileListAdapter(val context: Context) : RecyclerView.Adapter<FileInfoViewH
     override fun onBindViewHolder(holder: FileInfoViewHolder?, position: Int) {
         val info = fileInfoList[position]
         if (holder != null) {
-            holder.textViewName.text = info.file.name
+            holder.textViewName.text = info.fileName
             if (info.isFile()) {
                 holder.textViewDate.text = info.getFileDate() + "  " + info.getFileSize(context)
                 holder.imageViewDirection.visibility = View.GONE

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.domker.app.explorer.helper.SettingsHelper
 
 /**
  * Fragment的基类
@@ -13,10 +14,13 @@ import android.view.ViewGroup
  */
 
 open abstract class BaseFragment : Fragment(), IActionFragment {
+    protected lateinit var settings: SettingsHelper
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(initLayoutId(), null)
+        settings = SettingsHelper(activity)
         init(activity, view)
+        setHasOptionsMenu(true)
         return view
     }
 

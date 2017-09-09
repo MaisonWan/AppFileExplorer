@@ -3,7 +3,10 @@ package com.domker.app.explorer.file
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import java.io.File
+import android.support.v4.content.FileProvider
+
 
 /**
  * Created by wanlipeng on 2017/9/3.
@@ -15,14 +18,21 @@ object FileOpen {
      */
     fun openFile(context: Context, fileInfo: FileInfo) {
         val path = fileInfo.filePath
+        val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            getContentUri(context, path)
+        } else {
+            Uri.parse(path)
+        }
         val intent = when (fileInfo.fileType) {
-            FileType.TYPE_TEXT -> getTextFileIntent(path, true)
-            FileType.TYPE_IMAGE -> getImageFileIntent(path)
-            FileType.TYPE_APK -> getApkFileIntent(path)
-            FileType.TYPE_VIDEO -> getVideoFileIntent(path)
+            FileType.TYPE_TEXT -> getTextFileIntent(uri)
+            FileType.TYPE_IMAGE -> getImageFileIntent(uri)
+            FileType.TYPE_APK -> getApkFileIntent(uri)
+            FileType.TYPE_VIDEO -> getVideoFileIntent(uri)
             else -> null
         }
         if (intent != null) {
+            // 读取权限
+            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             context.startActivity(intent)
         }
     }
@@ -41,11 +51,10 @@ object FileOpen {
     /**
      * android获取一个用于打开图片文件的intent
      */
-    private fun getImageFileIntent(param: String): Intent {
+    private fun getImageFileIntent(uri: Uri): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addCategory(Intent.CATEGORY_DEFAULT)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        val uri = Uri.fromFile(File(param))
         intent.setDataAndType(uri, "image/*")
         return intent
     }
@@ -65,15 +74,11 @@ object FileOpen {
     /**
      * android获取一个用于打开文本文件的intent
      */
-    private fun getTextFileIntent(param: String, isUri: Boolean): Intent {
+    private fun getTextFileIntent(uri: Uri): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addCategory(Intent.CATEGORY_DEFAULT)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        if (isUri) {
-            intent.setDataAndType(Uri.parse(param), "text/plain")
-        } else {
-            intent.setDataAndType(Uri.fromFile(File(param)), "text/plain")
-        }
+        intent.setDataAndType(uri, "text/plain")
         return intent
     }
 
@@ -93,12 +98,11 @@ object FileOpen {
     /**
      * android获取一个用于打开视频文件的intent
      */
-    private fun getVideoFileIntent(param: String): Intent {
+    private fun getVideoFileIntent(uri: Uri): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra("oneshot", 0)
         intent.putExtra("configchange", 0)
-        val uri = Uri.fromFile(File(param))
         intent.setDataAndType(uri, "video/*")
         return intent
     }
@@ -154,11 +158,19 @@ object FileOpen {
     /**
      * 获取安装apk文件的intent
      */
-    private fun getApkFileIntent(param: String): Intent {
+    private fun getApkFileIntent(uri: Uri): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addCategory(Intent.CATEGORY_DEFAULT)
-        intent.setDataAndType(Uri.fromFile(File(param)),
-                "application/vnd.android.package-archive")
+        intent.setDataAndType(uri, "application/vnd.android.package-archive")
         return intent
     }
+
+    /**
+     * 获取uri
+     */
+    private fun getContentUri(context: Context, fileName: String): Uri {
+        return FileProvider.getUriForFile(context, "com.domker.app.explorer.fileprovider", File(fileName))
+    }
+
 }
+
