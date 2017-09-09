@@ -1,6 +1,7 @@
 package com.domker.app.explorer.file
 
 import android.os.AsyncTask
+import java.io.File
 
 /**
  * Created by wanlipeng on 2017/9/2.
@@ -26,7 +27,22 @@ class FileLoader(private val callback: FileLoaderCallback) : AsyncTask<String, V
             "4" -> fileList.sortedBy { it.isFile() }
             else -> fileList
         }
-        return fileList
+        if (path == "/") {
+            return fileList
+        }
+        val arrayList = ArrayList<FileInfo>()
+        arrayList.add(0, createParentDirFileInfo())
+        arrayList.addAll(fileList)
+        return arrayList
+    }
+
+    /**
+     * 创建跳转会上一层目录
+     */
+    private fun createParentDirFileInfo(): FileInfo {
+        val info = FileInfo(File(".."))
+        info.isJumpParentPath = true
+        return info
     }
 
     override fun onPreExecute() {

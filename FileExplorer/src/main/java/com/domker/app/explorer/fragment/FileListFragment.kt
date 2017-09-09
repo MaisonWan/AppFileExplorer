@@ -5,6 +5,9 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +21,7 @@ import com.domker.app.explorer.helper.PermissionHelper
 import com.domker.app.explorer.helper.SharedPreferencesHelper
 import com.domker.app.explorer.listener.OnItemClickListener
 import com.domker.app.explorer.util.DrawableUtils
+import com.domker.app.explorer.util.PhoneInfo
 import java.io.File
 
 /**
@@ -85,6 +89,20 @@ class FileListFragment : BaseFragment() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
+        inflater?.inflate(R.menu.fe_filelist_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.fe_menu_main -> loadPathFiles(PhoneInfo.getSdCardPath()!!)
+            R.id.fe_menu_reload -> reload()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     /**
      * 初始化适配器
      */
@@ -95,11 +113,11 @@ class FileListFragment : BaseFragment() {
         mAdapter.itemClickListener = object: OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val fileInfo = mAdapter.getFileInfoItem(position)
-                if (fileInfo.isFile()) {
-                    // 如果是文件，则打开
-                    FileOpen.openFile(activity, fileInfo)
-                } else {
-                    loadPathFiles(fileInfo.file.absolutePath)
+                when {
+                    fileInfo.isJumpParentPath -> loadPathFiles(File(mCurrentPath).parent)
+                    fileInfo.isFile() -> // 如果是文件，则打开
+                        FileOpen.openFile(activity, fileInfo)
+                    else -> loadPathFiles(fileInfo.file.absolutePath)
                 }
             }
 
@@ -115,7 +133,7 @@ class FileListFragment : BaseFragment() {
      */
     private fun loadPathFiles(path: String) {
         // 跳转之前，记录位置
-        if (mCurrentPath != null) {
+        if (mCurrentPath != null && path != mCurrentPath) {
             mAdapter.recordPosition(mCurrentPath!!, mLayoutManager)
         }
         mCurrentPath = path
@@ -123,5 +141,14 @@ class FileListFragment : BaseFragment() {
         mFileLoader = FileLoader(mCallback)
         mFileLoader.fileSortType = settings.getFileSortType()
         mFileLoader.execute(path)
+    }
+
+    /**
+     * 重新载入
+     */
+    private fun reload() {
+        if (mCurrentPath != null) {
+            loadPathFiles(mCurrentPath!!)
+        }
     }
 }

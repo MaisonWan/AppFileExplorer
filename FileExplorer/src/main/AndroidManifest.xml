@@ -10,9 +10,12 @@
     <application android:theme="@style/FEAppTheme">
         <activity
             android:name="com.domker.app.explorer.FileExplorerActivity"
+            android:exported="true"
             android:theme="@style/FEAppTheme.NoActionBar">
             <intent-filter>
+                <action android:name="com.domker.app.action.EXPLORER" />
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <provider

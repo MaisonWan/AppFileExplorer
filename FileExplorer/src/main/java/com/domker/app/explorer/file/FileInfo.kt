@@ -26,6 +26,15 @@ data class FileInfo(val file: File) {
         get() = file.absolutePath
 
     /**
+     * 是否是跳转到上层目录的标示
+     */
+    var isJumpParentPath: Boolean = false
+        get() = field
+        set(value) {
+            field = value
+        }
+
+    /**
      * 文件名称
      */
     val fileName: String

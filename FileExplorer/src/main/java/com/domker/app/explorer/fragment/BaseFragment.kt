@@ -20,6 +20,7 @@ open abstract class BaseFragment : Fragment(), IActionFragment {
         val view = inflater!!.inflate(initLayoutId(), null)
         settings = SettingsHelper(activity)
         init(activity, view)
+        setHasOptionsMenu(true)
         return view
     }
 
