@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/fe_menu_main"
         android:enabled="true"
-        android:icon="@drawable/fe_ic_info_black"
+        android:icon="@drawable/fe_ic_home_black"
         android:title="@string/fe_menu_main"
-        android:visible="true" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/fe_menu_reload"
         android:enabled="true"
         android:icon="@drawable/fe_ic_refresh_black"
         android:title="@string/fe_menu_reload"
-        android:visible="true" />
+        app:showAsAction="ifRoom" />
 </menu>
