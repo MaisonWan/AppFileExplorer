@@ -3,6 +3,7 @@ package com.domker.app.explorer.fragment
 import android.Manifest
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.support.design.widget.TabLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
@@ -33,7 +34,7 @@ class FileListFragment : BaseFragment() {
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var mAdapter: FileListAdapter
     private lateinit var mFileLoader: FileLoader
-    private lateinit var mSpHepler: SharedPreferencesHelper
+    private lateinit var mSpHelper: SharedPreferencesHelper
     private var mCurrentPath: String? = null
 
     // 完成接收的回调
@@ -54,7 +55,7 @@ class FileListFragment : BaseFragment() {
         mTextViewPath = view.findViewById(R.id.textViewPath)
         mLayoutManager = LinearLayoutManager(activity)
         mRecyclerViewFileList.layoutManager = mLayoutManager
-        mSpHepler = SharedPreferencesHelper(activity)
+        mSpHelper = SharedPreferencesHelper(activity)
         initAdapter()
     }
 
@@ -68,7 +69,7 @@ class FileListFragment : BaseFragment() {
 
     override fun onShown(context: Context) {
         if (PermissionHelper(activity).check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            loadPathFiles(mSpHepler.getDefaultPath())
+            loadPathFiles(mSpHelper.getDefaultPath())
         }
     }
 
@@ -85,7 +86,7 @@ class FileListFragment : BaseFragment() {
     override fun onStop() {
         super.onStop()
         if (settings.isRecordLastPath()) {
-            mSpHepler.saveDefaultPath(mCurrentPath!!)
+            mSpHelper.saveDefaultPath(mCurrentPath!!)
         }
     }
 

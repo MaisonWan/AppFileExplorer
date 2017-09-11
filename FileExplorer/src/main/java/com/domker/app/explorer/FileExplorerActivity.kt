@@ -1,10 +1,8 @@
 package com.domker.app.explorer
 
-import android.app.Fragment
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
-import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
@@ -32,7 +30,6 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     private lateinit var mAppIcon: ImageView
     private lateinit var mAppName: TextView
     private lateinit var mPackageName: TextView
-
     private lateinit var mBackPressHelper: KeyPressHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +38,7 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         initViews()
         setSupportActionBar(mToolbar)
         initListener()
-        loadFragment(FileListFragment())
+        loadFragment(FileViewerFragment::class.java)
     }
 
     private fun initListener() {
@@ -112,16 +109,16 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_app_info -> {
-                loadFragment(AppInfoFragment())
+                loadFragment(AppInfoFragment::class.java)
             }
             R.id.nav_file_explorer -> {
-                loadFragment(FileListFragment())
+                loadFragment(FileViewerFragment::class.java)
             }
             R.id.nav_phone_info -> {
-                loadFragment(PhoneInfoFragment())
+                loadFragment(PhoneInfoFragment::class.java)
             }
             R.id.nav_settings -> {
-                loadFragment(SettingsFragment())
+                loadFragment(SettingsFragment::class.java)
             }
             R.id.nav_share -> {
 
@@ -140,7 +137,8 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
                 .forEach { it.readableDatabase.close() }
     }
 
-    private fun loadFragment(fragment: Fragment) {
+    private fun loadFragment(clazz: Class<*>) {
+        val fragment = FragmentCache.getFragment(clazz)
         val manager = fragmentManager.beginTransaction()
         manager.replace(R.id.fragment_content, fragment)
         manager.commitAllowingStateLoss()
