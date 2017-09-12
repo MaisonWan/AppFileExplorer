@@ -26,7 +26,7 @@ class FileViewerFragment : BaseFragment() {
     @SuppressLint("NewApi")
     private fun initViews(view: View) {
         mViewPager = view.findViewById(R.id.viewPager)
-        val adapter = TabPagerAdapter(fragmentManager)
+        val adapter = TabPagerAdapter(context, fragmentManager)
         adapter.tabNames = mTabNames
         mViewPager.adapter = adapter
     }

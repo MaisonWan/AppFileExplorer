@@ -3,7 +3,7 @@ package com.domker.app.explorer.fragment
 import android.Manifest
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.design.widget.TabLayout
+import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
@@ -29,6 +29,10 @@ import java.io.File
  * Created by Maison on 2017/7/9.
  */
 class FileListFragment : BaseFragment() {
+    companion object {
+        val KEY_DEFAULT_PATH = "default_path"
+    }
+
     private lateinit var mTextViewPath: TextView
     private lateinit var mRecyclerViewFileList: RecyclerView
     private lateinit var mLayoutManager: LinearLayoutManager
@@ -36,6 +40,8 @@ class FileListFragment : BaseFragment() {
     private lateinit var mFileLoader: FileLoader
     private lateinit var mSpHelper: SharedPreferencesHelper
     private var mCurrentPath: String? = null
+
+    private lateinit var mDefaultPath: String
 
     // 完成接收的回调
     private val mCallback = object : FileLoader.FileLoaderCallback {
@@ -48,7 +54,6 @@ class FileListFragment : BaseFragment() {
         }
     }
 
-
     override fun init(context: Context, view: View) {
         activity.title = "文件浏览"
         mRecyclerViewFileList = view.findViewById(R.id.recyclerViewFiles)
@@ -56,6 +61,7 @@ class FileListFragment : BaseFragment() {
         mLayoutManager = LinearLayoutManager(activity)
         mRecyclerViewFileList.layoutManager = mLayoutManager
         mSpHelper = SharedPreferencesHelper(activity)
+        mDefaultPath = arguments.getString(KEY_DEFAULT_PATH, PhoneInfo.getSdCardPath()!!)
         initAdapter()
     }
 
@@ -69,7 +75,7 @@ class FileListFragment : BaseFragment() {
 
     override fun onShown(context: Context) {
         if (PermissionHelper(activity).check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            loadPathFiles(mSpHelper.getDefaultPath())
+            loadPathFiles(mSpHelper.getDefaultPath(mDefaultPath))
         }
     }
 
@@ -98,7 +104,7 @@ class FileListFragment : BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.fe_menu_main -> loadPathFiles(PhoneInfo.getSdCardPath()!!)
+            R.id.fe_menu_main -> loadPathFiles(mDefaultPath)
             R.id.fe_menu_reload -> reload()
         }
         return super.onOptionsItemSelected(item)

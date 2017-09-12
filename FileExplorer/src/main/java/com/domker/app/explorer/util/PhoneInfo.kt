@@ -172,5 +172,10 @@ class PhoneInfo constructor(context: Context) {
                 Environment.getExternalStorageDirectory().toString()
             } else null
         }
+
+        /**
+         * 返回内置路径
+         */
+        fun getInnerPath(context: Context): String = context.filesDir?.parent ?: "/"
     }
 }
