@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
-import android.util.Log
 import android.view.View
 import com.domker.app.explorer.R
 import com.domker.app.explorer.adapter.TabPagerAdapter
@@ -27,7 +26,6 @@ class FileViewerFragment : BaseFragment() {
     @SuppressLint("NewApi")
     private fun initViews(view: View) {
         mViewPager = view.findViewById(R.id.viewPager)
-        fragmentManager.fragments.forEach { Log.i("FileViewerFragment", it.toString()) }
         val adapter = TabPagerAdapter(fragmentManager)
         adapter.tabNames = mTabNames
         mViewPager.adapter = adapter
@@ -48,7 +46,7 @@ class FileViewerFragment : BaseFragment() {
     }
 
     override fun onShown(context: Context) {
-//        mViewPager.currentItem = 1
+        mViewPager.currentItem = 1
     }
 
     override fun initLayoutId(): Int = R.layout.fe_fragment_file_viewer

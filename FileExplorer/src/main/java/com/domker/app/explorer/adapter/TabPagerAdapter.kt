@@ -37,4 +37,5 @@ class TabPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(f
     override fun getPageTitle(position: Int): CharSequence {
         return tabNames?.get(position) ?: ""
     }
+
 }

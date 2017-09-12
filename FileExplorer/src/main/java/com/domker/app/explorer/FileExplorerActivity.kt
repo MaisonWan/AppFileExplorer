@@ -16,7 +16,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.domker.app.explorer.fragment.*
 import com.domker.app.explorer.helper.KeyPressHelper
-import com.domker.app.explorer.helper.SQLHelper
 import com.domker.app.explorer.hostapp.HostApp
 
 /**
@@ -30,7 +29,10 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     private lateinit var mAppIcon: ImageView
     private lateinit var mAppName: TextView
     private lateinit var mPackageName: TextView
+
     private lateinit var mBackPressHelper: KeyPressHelper
+    private lateinit var mFragmentScheduler: FragmentScheduler
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +52,7 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
 
         mNavView.setNavigationItemSelectedListener(this)
         mBackPressHelper = KeyPressHelper(this)
+        mFragmentScheduler = FragmentScheduler(fragmentManager)
         mFab.setOnClickListener { view ->
             val currentFragment = fragmentManager.findFragmentById(R.id.fragment_content) as IActionFragment
             currentFragment?.onAssistButtonClick(view)
@@ -72,7 +75,10 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         mPackageName.text = HostApp.getHostAppPackage(baseContext)
     }
 
-    private fun initAssistButton(fragment: IActionFragment) {
+    /**
+     * 更新assist按钮状态
+     */
+    private fun updateAssistButton(fragment: IActionFragment) {
         val drawable = fragment.initAssistButtonDrawable(this)
         if (drawable != null) {
             mFab.visibility = View.VISIBLE
@@ -132,17 +138,18 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         return true
     }
 
-    private fun testCreateDatabase() {
-        (0..5).map { SQLHelper(this, "test_$it.db", null, 1) }
-                .forEach { it.readableDatabase.close() }
+    private fun loadFragment(clazz: Class<*>) {
+        val fragment = mFragmentScheduler.loadFragment(clazz)
+        if (fragment is IActionFragment) {
+            // 初始化按钮的显示
+            updateAssistButton(fragment)
+        }
     }
 
-    private fun loadFragment(clazz: Class<*>) {
-        val fragment = FragmentCache.getFragment(clazz)
-        val manager = fragmentManager.beginTransaction()
-        manager.replace(R.id.fragment_content, fragment)
-        manager.commitAllowingStateLoss()
-        // 初始化按钮的显示
-        initAssistButton(fragment as IActionFragment)
-    }
+//
+//    private fun testCreateDatabase() {
+//        (0..5).map { SQLHelper(this, "test_$it.db", null, 1) }
+//                .forEach { it.readableDatabase.close() }
+//    }
+
 }
