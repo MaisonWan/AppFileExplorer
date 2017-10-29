@@ -20,10 +20,6 @@ class TabPagerAdapter(val context: Context, fragmentManager: FragmentManager) :
      * 显示tab的名字
      */
     var tabNames: Array<String>? = null
-        set(value) {
-            field = value
-        }
-        get() = field
 
     override fun getItem(position: Int): Fragment {
         Log.i("Adapter", "getItem: " + position)

@@ -1,7 +1,6 @@
 package com.domker.app.explorer.helper
 
 import android.content.Context
-import com.domker.app.explorer.util.PhoneInfo
 
 /**
  * 存储

@@ -3,7 +3,6 @@ package com.domker.app.explorer.fragment
 import android.Manifest
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
@@ -61,6 +60,7 @@ class FileListFragment : BaseFragment() {
         mLayoutManager = LinearLayoutManager(activity)
         mRecyclerViewFileList.layoutManager = mLayoutManager
         mSpHelper = SharedPreferencesHelper(activity)
+        // 获取传递过程中的初始化路径
         mDefaultPath = arguments.getString(KEY_DEFAULT_PATH, PhoneInfo.getSdCardPath()!!)
         initAdapter()
     }
