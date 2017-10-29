@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
@@ -11,6 +13,7 @@ import com.domker.app.explorer.R
 import com.domker.app.explorer.helper.PermissionHelper
 import com.domker.app.explorer.util.DrawableUtils
 import com.domker.app.explorer.util.PhoneInfo
+import com.domker.app.explorer.util.hideMenu
 
 
 /**
@@ -51,6 +54,11 @@ class PhoneInfoFragment : BaseFragment() {
 
     override fun onBackPressed(): Boolean = false
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.hideMenu()
+    }
+    
     /**
      * 初始化设备信息
      */

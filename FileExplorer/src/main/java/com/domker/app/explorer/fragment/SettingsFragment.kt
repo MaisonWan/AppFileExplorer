@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.preference.ListPreference
 import android.preference.Preference
 import android.preference.PreferenceFragment
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import com.domker.app.explorer.R
 import com.domker.app.explorer.helper.SettingsHelper.Companion.KEY_FILE_SORT
+import com.domker.app.explorer.util.hideMenu
 
 /**
  * 设置
@@ -27,12 +30,17 @@ class SettingsFragment : PreferenceFragment(), IActionFragment {
             loadFileSortType()
             false
         }
-
+        setHasOptionsMenu(true)
     }
 
     override fun onResume() {
         super.onResume()
         loadFileSortType()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.hideMenu()
     }
 
     private fun loadFileSortType() {

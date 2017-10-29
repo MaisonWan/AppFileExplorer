@@ -43,7 +43,7 @@ data class FileInfo(val file: File) {
     /**
      * 获取文件的时间
      */
-    fun getFileDate() = formatter.format(Date(file.lastModified()))!!
+    fun getFileDate() = if (isJumpParentPath) "" else formatter.format(Date(file.lastModified()))!!
 
     /**
      * 是否是文件

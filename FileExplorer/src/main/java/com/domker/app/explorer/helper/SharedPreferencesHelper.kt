@@ -1,7 +1,6 @@
 package com.domker.app.explorer.helper
 
 import android.content.Context
-import com.domker.app.explorer.util.PhoneInfo
 
 /**
  * 存储
@@ -15,8 +14,8 @@ class SharedPreferencesHelper(context: Context) {
     /**
      * 获取默认加载路径
      */
-    fun getDefaultPath(): String {
-        return sp.getString(KEY_DEFAULT_PATH, PhoneInfo.getSdCardPath())
+    fun getDefaultPath(defaultPath: String): String {
+        return sp.getString(KEY_DEFAULT_PATH, defaultPath)
     }
 
     /**
