@@ -2,13 +2,18 @@ package com.domker.app.explorer.fragment
 
 import android.Manifest
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Build
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.domker.app.explorer.R
 import com.domker.app.explorer.helper.PermissionHelper
+import com.domker.app.explorer.util.DrawableUtils
 import com.domker.app.explorer.util.PhoneInfo
+import com.domker.app.explorer.util.hideMenu
 
 
 /**
@@ -28,6 +33,16 @@ class PhoneInfoFragment : BaseFragment() {
         permissionHelper = PermissionHelper(context)
     }
 
+    override fun initAssistButtonDrawable(context: Context): Drawable? {
+        return DrawableUtils.getDrawable(context, R.drawable.fe_ic_refresh_black)
+    }
+
+    override fun onAssistButtonClick(view: View) {
+        initData(activity)
+        mAdapter.notifyDataSetChanged()
+        mListView.smoothScrollToPosition(0)
+    }
+
     override fun onShown(context: Context) {
         if (permissionHelper.check(Manifest.permission.READ_PHONE_STATE)) {
             initData(context)
@@ -39,12 +54,18 @@ class PhoneInfoFragment : BaseFragment() {
 
     override fun onBackPressed(): Boolean = false
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.hideMenu()
+    }
+    
     /**
      * 初始化设备信息
      */
     private fun initData(context: Context) {
         val util = PhoneInfo(context)
 
+        mData.clear()
         val totalMemory = util.getTotalMemory()
         val showTotalMemory = String.format("Total Memory : %s", totalMemory)
         mData.add(showTotalMemory)

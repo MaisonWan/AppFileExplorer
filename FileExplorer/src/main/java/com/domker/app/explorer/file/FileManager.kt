@@ -1,13 +1,9 @@
 package com.domker.app.explorer.file
 
 import android.content.Context
-import java.io.File
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.content.pm.PackageInfo
 import android.graphics.drawable.Drawable
-
-
+import java.io.File
 
 /**
  * 封装文件相关操作的类

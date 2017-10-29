@@ -26,6 +26,15 @@ data class FileInfo(val file: File) {
         get() = file.absolutePath
 
     /**
+     * 是否是跳转到上层目录的标示
+     */
+    var isJumpParentPath: Boolean = false
+        get() = field
+        set(value) {
+            field = value
+        }
+
+    /**
      * 文件名称
      */
     val fileName: String
@@ -34,7 +43,7 @@ data class FileInfo(val file: File) {
     /**
      * 获取文件的时间
      */
-    fun getFileDate() = formatter.format(Date(file.lastModified()))!!
+    fun getFileDate() = if (isJumpParentPath) "" else formatter.format(Date(file.lastModified()))!!
 
     /**
      * 是否是文件

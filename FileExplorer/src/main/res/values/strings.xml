@@ -17,14 +17,19 @@
     <string name="fe_settings_sort_summary">文件排序方式</string>
     <string name="fe_settings_sort_default_value">0</string>
 
+    <string name="fe_menu_main">显示主页</string>
+    <string name="fe_menu_reload">刷新</string>
+
     <string-array name="file_sort_name">
         <item>按名称</item>
         <item>按大小</item>
         <item>按时间</item>
+        <item>按类型</item>
     </string-array>
     <string-array name="file_sort_value">
         <item>1</item>
         <item>2</item>
         <item>3</item>
+        <item>4</item>
     </string-array>
 </resources>

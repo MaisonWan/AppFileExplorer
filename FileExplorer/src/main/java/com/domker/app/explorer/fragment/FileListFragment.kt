@@ -2,8 +2,12 @@ package com.domker.app.explorer.fragment
 
 import android.Manifest
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -16,19 +20,27 @@ import com.domker.app.explorer.file.FileOpen
 import com.domker.app.explorer.helper.PermissionHelper
 import com.domker.app.explorer.helper.SharedPreferencesHelper
 import com.domker.app.explorer.listener.OnItemClickListener
+import com.domker.app.explorer.util.DrawableUtils
+import com.domker.app.explorer.util.PhoneInfo
 import java.io.File
 
 /**
  * Created by Maison on 2017/7/9.
  */
 class FileListFragment : BaseFragment() {
+    companion object {
+        val KEY_DEFAULT_PATH = "default_path"
+    }
+
     private lateinit var mTextViewPath: TextView
     private lateinit var mRecyclerViewFileList: RecyclerView
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var mAdapter: FileListAdapter
     private lateinit var mFileLoader: FileLoader
-    private lateinit var mSpHepler: SharedPreferencesHelper
+    private lateinit var mSpHelper: SharedPreferencesHelper
     private var mCurrentPath: String? = null
+
+    private lateinit var mDefaultPath: String
 
     // 完成接收的回调
     private val mCallback = object : FileLoader.FileLoaderCallback {
@@ -41,20 +53,29 @@ class FileListFragment : BaseFragment() {
         }
     }
 
-
     override fun init(context: Context, view: View) {
         activity.title = "文件浏览"
         mRecyclerViewFileList = view.findViewById(R.id.recyclerViewFiles)
         mTextViewPath = view.findViewById(R.id.textViewPath)
         mLayoutManager = LinearLayoutManager(activity)
         mRecyclerViewFileList.layoutManager = mLayoutManager
-        mSpHepler = SharedPreferencesHelper(activity)
+        mSpHelper = SharedPreferencesHelper(activity)
+        // 获取传递过程中的初始化路径
+        mDefaultPath = arguments.getString(KEY_DEFAULT_PATH, PhoneInfo.getSdCardPath()!!)
         initAdapter()
+    }
+
+    override fun initAssistButtonDrawable(context: Context): Drawable? {
+        return DrawableUtils.getDrawable(context, R.drawable.fe_ic_arrow_upward_black)
+    }
+
+    override fun onAssistButtonClick(view: View) {
+        mRecyclerViewFileList.smoothScrollToPosition(0)
     }
 
     override fun onShown(context: Context) {
         if (PermissionHelper(activity).check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            loadPathFiles(mSpHepler.getDefaultPath())
+            loadPathFiles(mSpHelper.getDefaultPath(mDefaultPath))
         }
     }
 
@@ -70,7 +91,23 @@ class FileListFragment : BaseFragment() {
 
     override fun onStop() {
         super.onStop()
-        mSpHepler.saveDefaultPath(mCurrentPath!!)
+        if (settings.isRecordLastPath()) {
+            mSpHelper.saveDefaultPath(mCurrentPath!!)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
+        inflater?.inflate(R.menu.fe_filelist_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.fe_menu_main -> loadPathFiles(mDefaultPath)
+            R.id.fe_menu_reload -> reload()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /**
@@ -83,11 +120,11 @@ class FileListFragment : BaseFragment() {
         mAdapter.itemClickListener = object: OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val fileInfo = mAdapter.getFileInfoItem(position)
-                if (fileInfo.isFile()) {
-                    // 如果是文件，则打开
-                    FileOpen.openFile(activity, fileInfo)
-                } else {
-                    loadPathFiles(fileInfo.file.absolutePath)
+                when {
+                    fileInfo.isJumpParentPath -> loadPathFiles(File(mCurrentPath).parent)
+                    fileInfo.isFile() -> // 如果是文件，则打开
+                        FileOpen.openFile(activity, fileInfo)
+                    else -> loadPathFiles(fileInfo.file.absolutePath)
                 }
             }
 
@@ -103,12 +140,22 @@ class FileListFragment : BaseFragment() {
      */
     private fun loadPathFiles(path: String) {
         // 跳转之前，记录位置
-        if (mCurrentPath != null) {
+        if (mCurrentPath != null && path != mCurrentPath) {
             mAdapter.recordPosition(mCurrentPath!!, mLayoutManager)
         }
         mCurrentPath = path
         mTextViewPath.text = path
         mFileLoader = FileLoader(mCallback)
+        mFileLoader.fileSortType = settings.getFileSortType()
         mFileLoader.execute(path)
+    }
+
+    /**
+     * 重新载入
+     */
+    private fun reload() {
+        if (mCurrentPath != null) {
+            loadPathFiles(mCurrentPath!!)
+        }
     }
 }
