@@ -13,9 +13,10 @@ class FileLoader(private val callback: FileLoaderCallback) : AsyncTask<String, V
      * 文件排序
      */
     var fileSortType: String = "1"
-        set(value) {
-            field = value
-        }
+    /**
+     * 当前分类的根目录
+     */
+    var rootPath: String = "/"
 
     override fun doInBackground(vararg args: String?): List<FileInfo> {
         val path = args[0] as String
@@ -31,7 +32,9 @@ class FileLoader(private val callback: FileLoaderCallback) : AsyncTask<String, V
             return fileList
         }
         val arrayList = ArrayList<FileInfo>()
-        arrayList.add(0, createParentDirFileInfo())
+        if (path != rootPath) {
+            arrayList.add(0, createParentDirFileInfo())
+        }
         arrayList.addAll(fileList)
         return arrayList
     }
@@ -43,10 +46,6 @@ class FileLoader(private val callback: FileLoaderCallback) : AsyncTask<String, V
         val info = FileInfo(File(".."))
         info.isJumpParentPath = true
         return info
-    }
-
-    override fun onPreExecute() {
-        super.onPreExecute()
     }
 
     override fun onPostExecute(result: List<FileInfo>?) {

@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import com.domker.app.explorer.R
 import com.domker.app.explorer.adapter.TabPagerAdapter
+import com.domker.app.explorer.helper.SharedPreferencesHelper
 
 /**
  * Created by wanlipeng on 2017/9/11.
@@ -15,6 +16,8 @@ import com.domker.app.explorer.adapter.TabPagerAdapter
 class FileViewerFragment : BaseFragment() {
     private lateinit var mTabLayout: TabLayout
     private lateinit var mViewPager: ViewPager
+    private lateinit var mAdapter: TabPagerAdapter
+    private lateinit var mSpHelper: SharedPreferencesHelper
 
     private val mTabNames = arrayOf("外部存储", "内置目录", "收藏")
 
@@ -26,9 +29,11 @@ class FileViewerFragment : BaseFragment() {
     @SuppressLint("NewApi")
     private fun initViews(view: View) {
         mViewPager = view.findViewById(R.id.viewPager)
-        val adapter = TabPagerAdapter(context, fragmentManager)
-        adapter.tabNames = mTabNames
-        mViewPager.adapter = adapter
+        mSpHelper = SharedPreferencesHelper.getInstance(activity)
+        mAdapter = TabPagerAdapter(context, fragmentManager)
+        mAdapter.tabNames = mTabNames
+        mViewPager.adapter = mAdapter
+        mViewPager.currentItem = mSpHelper.getDefaultItemId()
     }
 
     private fun initTab(view: View) {
@@ -46,13 +51,18 @@ class FileViewerFragment : BaseFragment() {
     }
 
     override fun onShown(context: Context) {
-        mViewPager.currentItem = 1
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mSpHelper.saveDefaultItemId(mViewPager.currentItem)
     }
 
     override fun initLayoutId(): Int = R.layout.fe_fragment_file_viewer
 
     override fun onBackPressed(): Boolean {
-        return false
+        return mAdapter.getCurrentFragment(mViewPager.currentItem)?.onBackPressed()!!
     }
 
 }

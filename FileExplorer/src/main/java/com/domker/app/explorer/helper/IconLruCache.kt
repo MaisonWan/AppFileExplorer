@@ -51,6 +51,7 @@ class IconLruCache(val context: Context) {
         }
         return when (fileInfo.fileType) {
             FileType.TYPE_DIRECTORY -> getResDrawable(R.drawable.fe_ic_folder_black)
+            FileType.TYPE_IMAGE -> getResDrawable(R.drawable.fe_ic_image_black)
             else -> getResDrawable(R.drawable.ic_menu_camera)
         }
     }

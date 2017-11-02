@@ -25,9 +25,6 @@ class FileListAdapter(val context: Context) : RecyclerView.Adapter<FileInfoViewH
     private val mPositionMap: MutableMap<String, Int> = HashMap()
 
     var itemClickListener: OnItemClickListener? = null
-        set(value) {
-            field = value
-        }
 
     override fun onBindViewHolder(holder: FileInfoViewHolder?, position: Int) {
         val info = fileInfoList[position]
