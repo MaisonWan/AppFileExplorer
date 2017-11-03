@@ -55,7 +55,7 @@ class FileExplorerActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         mFragmentScheduler = FragmentScheduler(fragmentManager)
         mFab.setOnClickListener { view ->
             val currentFragment = fragmentManager.findFragmentById(R.id.fragment_content) as IActionFragment
-            currentFragment?.onAssistButtonClick(view)
+            currentFragment.onAssistButtonClick(view)
         }
     }
 

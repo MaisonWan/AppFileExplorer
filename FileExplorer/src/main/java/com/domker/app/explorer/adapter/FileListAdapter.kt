@@ -14,7 +14,7 @@ import com.domker.app.explorer.helper.IconLruCache
 import com.domker.app.explorer.listener.OnItemClickListener
 
 /**
- * 显示文件列表
+ * 显示文件列表的适配器
  * Created by Maison on 2017/7/10.
  */
 class FileListAdapter(val context: Context) : RecyclerView.Adapter<FileInfoViewHolder>() {

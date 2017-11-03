@@ -17,6 +17,7 @@ import com.domker.app.explorer.adapter.ItemDivider
 import com.domker.app.explorer.file.FileInfo
 import com.domker.app.explorer.file.FileLoader
 import com.domker.app.explorer.file.FileOpen
+import com.domker.app.explorer.helper.DbManager
 import com.domker.app.explorer.helper.PermissionHelper
 import com.domker.app.explorer.helper.SharedPreferencesHelper
 import com.domker.app.explorer.listener.OnItemClickListener
@@ -25,11 +26,13 @@ import com.domker.app.explorer.util.PhoneInfo
 import java.io.File
 
 /**
+ * 文件浏览的具体显示界面
  * Created by Maison on 2017/7/9.
  */
 class FileListFragment : BaseFragment() {
     companion object {
         val KEY_DEFAULT_PATH = "default_path"
+        val KEY_IS_FAVORITE = "default_favorite"
     }
 
     private lateinit var mTextViewPath: TextView
@@ -37,10 +40,12 @@ class FileListFragment : BaseFragment() {
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var mAdapter: FileListAdapter
     private lateinit var mFileLoader: FileLoader
+    private lateinit var mDbManager: DbManager
     private lateinit var mSpHelper: SharedPreferencesHelper
     private var mCurrentPath: String? = null
 
     private lateinit var mDefaultPath: String
+    private var isShowFavorite = false
 
     // 完成接收的回调
     private val mCallback = object : FileLoader.FileLoaderCallback {
@@ -55,18 +60,26 @@ class FileListFragment : BaseFragment() {
 
     override fun init(context: Context, view: View) {
         activity.title = "文件浏览"
+        mSpHelper = SharedPreferencesHelper.getInstance(activity)
+        mDbManager = DbManager(activity)
+        initViews(view)
+        initArguments()
+        initAdapter()
+        // 显示上次记录的目录
+        if (PermissionHelper(activity).check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (isShowFavorite) {
+                loadFavoritePaths()
+            } else {
+                loadPathFiles(mSpHelper.getDefaultPath(mDefaultPath))
+            }
+        }
+    }
+
+    private fun initViews(view: View) {
         mRecyclerViewFileList = view.findViewById(R.id.recyclerViewFiles)
         mTextViewPath = view.findViewById(R.id.textViewPath)
         mLayoutManager = LinearLayoutManager(activity)
         mRecyclerViewFileList.layoutManager = mLayoutManager
-        mSpHelper = SharedPreferencesHelper.getInstance(activity)
-        // 获取传递过程中的初始化路径
-        mDefaultPath = arguments.getString(KEY_DEFAULT_PATH, PhoneInfo.getSdCardPath()!!)
-        initAdapter()
-        // 显示上次记录的目录
-        if (PermissionHelper(activity).check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            loadPathFiles(mSpHelper.getDefaultPath(mDefaultPath))
-        }
     }
 
     override fun initAssistButtonDrawable(context: Context): Drawable? {
@@ -112,6 +125,12 @@ class FileListFragment : BaseFragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun initArguments() {
+        isShowFavorite = arguments.getBoolean(KEY_IS_FAVORITE, false)
+        // 获取传递过程中的初始化路径
+        mDefaultPath = arguments.getString(KEY_DEFAULT_PATH, PhoneInfo.getSdCardPath()!!)
+    }
+
     /**
      * 初始化适配器
      */
@@ -154,11 +173,19 @@ class FileListFragment : BaseFragment() {
         mFileLoader.execute(path)
     }
 
+    private fun loadFavoritePaths() {
+        var paths = mDbManager.getFavoritePath()
+        mAdapter.setFileList(paths)
+        mAdapter.notifyDataSetChanged()
+    }
+
     /**
      * 重新载入
      */
     private fun reload() {
-        if (mCurrentPath != null) {
+        if (isShowFavorite) {
+            loadFavoritePaths()
+        } else if (mCurrentPath != null) {
             loadPathFiles(mCurrentPath!!)
         }
     }

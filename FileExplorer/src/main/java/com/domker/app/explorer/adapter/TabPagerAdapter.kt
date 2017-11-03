@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.support.v13.app.FragmentPagerAdapter
 import android.util.Log
 import com.domker.app.explorer.fragment.FileListFragment
+import com.domker.app.explorer.fragment.FileListFragment.Companion.KEY_DEFAULT_PATH
+import com.domker.app.explorer.fragment.FileListFragment.Companion.KEY_IS_FAVORITE
 import com.domker.app.explorer.util.PhoneInfo
 
 /**
@@ -35,8 +37,9 @@ class TabPagerAdapter(val context: Context, fragmentManager: FragmentManager) :
         val fragment = fragments[position]
         val bundle = Bundle()
         when (position) {
-            0 -> bundle.putString(FileListFragment.KEY_DEFAULT_PATH, PhoneInfo.getSdCardPath()!!)
-            1 -> bundle.putString(FileListFragment.KEY_DEFAULT_PATH, PhoneInfo.getInnerPath(context))
+            0 -> bundle.putString(KEY_DEFAULT_PATH, PhoneInfo.getSdCardPath()!!)
+            1 -> bundle.putString(KEY_DEFAULT_PATH, PhoneInfo.getInnerPath(context))
+            2 -> bundle.putBoolean(KEY_IS_FAVORITE, true)
         }
         fragment?.arguments = bundle
         return fragment!!
