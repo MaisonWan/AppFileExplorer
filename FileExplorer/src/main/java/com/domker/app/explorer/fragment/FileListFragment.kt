@@ -59,10 +59,14 @@ class FileListFragment : BaseFragment() {
         mTextViewPath = view.findViewById(R.id.textViewPath)
         mLayoutManager = LinearLayoutManager(activity)
         mRecyclerViewFileList.layoutManager = mLayoutManager
-        mSpHelper = SharedPreferencesHelper(activity)
+        mSpHelper = SharedPreferencesHelper.getInstance(activity)
         // 获取传递过程中的初始化路径
         mDefaultPath = arguments.getString(KEY_DEFAULT_PATH, PhoneInfo.getSdCardPath()!!)
         initAdapter()
+        // 显示上次记录的目录
+        if (PermissionHelper(activity).check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            loadPathFiles(mSpHelper.getDefaultPath(mDefaultPath))
+        }
     }
 
     override fun initAssistButtonDrawable(context: Context): Drawable? {
@@ -74,15 +78,13 @@ class FileListFragment : BaseFragment() {
     }
 
     override fun onShown(context: Context) {
-        if (PermissionHelper(activity).check(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            loadPathFiles(mSpHelper.getDefaultPath(mDefaultPath))
-        }
+
     }
 
     override fun initLayoutId() = R.layout.fe_fragment_database_list
 
     override fun onBackPressed(): Boolean {
-        if (mCurrentPath == "/") {
+        if (mCurrentPath == mDefaultPath) {
             return false
         }
         loadPathFiles(File(mCurrentPath).parent)
@@ -129,7 +131,8 @@ class FileListFragment : BaseFragment() {
             }
 
             override fun onItemLongClick(view: View, position: Int): Boolean {
-                Toast.makeText(activity, "On Long Click Item $position", Toast.LENGTH_SHORT).show()
+                val fileInfo = mAdapter.getFileInfoItem(position)
+                Toast.makeText(activity, "${fileInfo.fileName}", Toast.LENGTH_SHORT).show()
                 return true
             }
         }
@@ -147,6 +150,7 @@ class FileListFragment : BaseFragment() {
         mTextViewPath.text = path
         mFileLoader = FileLoader(mCallback)
         mFileLoader.fileSortType = settings.getFileSortType()
+        mFileLoader.rootPath = mDefaultPath
         mFileLoader.execute(path)
     }
 

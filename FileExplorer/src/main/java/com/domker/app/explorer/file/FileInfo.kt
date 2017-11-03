@@ -3,7 +3,6 @@ package com.domker.app.explorer.file
 import android.content.Context
 import android.text.format.Formatter
 import java.io.File
-import java.text.Format
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,10 +28,6 @@ data class FileInfo(val file: File) {
      * 是否是跳转到上层目录的标示
      */
     var isJumpParentPath: Boolean = false
-        get() = field
-        set(value) {
-            field = value
-        }
 
     /**
      * 文件名称

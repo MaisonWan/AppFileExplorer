@@ -1,6 +1,5 @@
 package com.domker.app.explorer.util
 
-import android.app.FragmentManager
 import android.view.Menu
 
 /**

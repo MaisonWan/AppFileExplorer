@@ -15,22 +15,31 @@ import com.domker.app.explorer.util.PhoneInfo
  */
 class TabPagerAdapter(val context: Context, fragmentManager: FragmentManager) :
         FragmentPagerAdapter(fragmentManager) {
+    private lateinit var fragments : Array<FileListFragment?>
 
     /**
      * 显示tab的名字
      */
     var tabNames: Array<String>? = null
+        set(value) {
+            field = value
+            fragments = arrayOfNulls(field!!.size)
+        }
+
 
     override fun getItem(position: Int): Fragment {
         Log.i("Adapter", "getItem: " + position)
-        val fragment = FileListFragment()
+        if (fragments[position] == null) {
+            fragments[position] = FileListFragment()
+        }
+        val fragment = fragments[position]
         val bundle = Bundle()
         when (position) {
             0 -> bundle.putString(FileListFragment.KEY_DEFAULT_PATH, PhoneInfo.getSdCardPath()!!)
             1 -> bundle.putString(FileListFragment.KEY_DEFAULT_PATH, PhoneInfo.getInnerPath(context))
         }
-        fragment.arguments = bundle
-        return fragment
+        fragment?.arguments = bundle
+        return fragment!!
     }
 
     override fun getCount(): Int = tabNames?.size ?:0
@@ -39,4 +48,7 @@ class TabPagerAdapter(val context: Context, fragmentManager: FragmentManager) :
         return tabNames?.get(position) ?: ""
     }
 
+    fun getCurrentFragment(position: Int): FileListFragment? {
+        return if (position >= fragments.size) null else fragments[position]
+    }
 }
