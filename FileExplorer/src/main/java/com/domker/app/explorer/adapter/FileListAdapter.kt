@@ -3,6 +3,7 @@ package com.domker.app.explorer.adapter
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,9 +86,18 @@ class FileListAdapter(val context: Context) : RecyclerView.Adapter<FileInfoViewH
     }
 }
 
-class FileInfoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class FileInfoViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
+
     val textViewName: TextView = view.findViewById(R.id.textViewName)
     val textViewDate: TextView = view.findViewById(R.id.textViewDate)
     val imageViewFileType: ImageView = view.findViewById(R.id.imageViewFileType)
     val imageViewDirection: ImageView = view.findViewById(R.id.imageViewDirection)
+
+    init {
+        view.setOnCreateContextMenuListener(this)
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+
+    }
 }

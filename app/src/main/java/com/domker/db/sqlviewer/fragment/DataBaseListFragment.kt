@@ -3,7 +3,6 @@ package com.domker.db.sqlviewer.fragment
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.View
-import android.widget.Toast
 import com.domker.app.explorer.fragment.BaseFragment
 import com.domker.app.explorer.helper.DbManager
 import com.domker.db.explorer.R
@@ -33,7 +32,7 @@ class DataBaseListFragment : BaseFragment() {
     }
 
     override fun initLayoutId(): Int {
-        return R.layout.fe_fragment_database_list;
+        return R.layout.fe_fragment_file_list;
     }
 
     fun loadDataFiles() {

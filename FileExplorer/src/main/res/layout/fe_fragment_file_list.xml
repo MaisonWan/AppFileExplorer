@@ -12,13 +12,13 @@
         android:gravity="center_vertical|left"
         android:padding="5dp" />
 
-    <android.support.v7.widget.RecyclerView
+    <com.domker.app.explorer.view.FileRecyclerView
         android:id="@+id/recyclerViewFiles"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/recycler_bg"
         android:divider="#ffff0000"
         android:dividerHeight="2dp"
-        android:background="@drawable/recycler_bg"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp" />
 
