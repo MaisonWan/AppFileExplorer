@@ -4,10 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.TextView
-import android.widget.Toast
 import com.domker.app.explorer.R
 import com.domker.app.explorer.adapter.FileListAdapter
 import com.domker.app.explorer.adapter.ItemDivider
@@ -199,7 +197,7 @@ class FileListFragment : BaseFragment() {
     }
 
     private fun loadFavoritePaths() {
-        var paths = mDbManager.getFavoritePath()
+        var paths = mDbManager.getAllPathFavorite()
         mAdapter.setFileList(paths)
         mAdapter.notifyDataSetChanged()
     }
