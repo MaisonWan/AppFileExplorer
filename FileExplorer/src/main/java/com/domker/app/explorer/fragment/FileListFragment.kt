@@ -193,7 +193,7 @@ class FileListFragment : BaseFragment() {
     }
 
     private fun loadFavoritePaths() {
-        var paths = mDbManager.getFavoritePath()
+        var paths = mDbManager.getAllPathFavorite()
         mAdapter.setFileList(paths)
         mAdapter.notifyDataSetChanged()
     }

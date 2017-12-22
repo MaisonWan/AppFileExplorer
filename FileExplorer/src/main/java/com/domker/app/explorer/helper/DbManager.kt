@@ -1,8 +1,11 @@
 package com.domker.app.explorer.helper
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import java.io.File
 import android.content.ContentValues
+import com.domker.app.explorer.data.FileDatabase
+import com.domker.app.explorer.data.PathFavorite
 import com.domker.app.explorer.file.FileInfo
 
 
@@ -10,11 +13,10 @@ import com.domker.app.explorer.file.FileInfo
  * Created by Maison on 2017/7/5.
  */
 class DbManager {
-    private val dbHelper: DbHelper
-    private val DB_NAME = "AppFileExplorer.db"
-    private val TABLE_FAVORITE = "path_favorite"
+    private val db: FileDatabase
 
     companion object {
+        private val DB_NAME = "AppFileExplorer.db"
 
         fun getDataFiles(context: Context): List<File> {
             val list = context.databaseList()
@@ -25,30 +27,24 @@ class DbManager {
     }
 
     constructor(context: Context) {
-        dbHelper = DbHelper(context, DB_NAME)
+        db = Room.databaseBuilder(context, FileDatabase::class.java, DB_NAME).build()
     }
 
     /**
      * 添加收藏到列表
      */
-    fun addPathFavor(info: FileInfo): Long {
-        val cv = ContentValues()
-        cv.put("path", info.filePath)
-        return dbHelper.writable().insert(TABLE_FAVORITE, null, cv)
+    fun addPathFavorite(info: FileInfo): Long {
+        val pathFavorite = PathFavorite()
+        pathFavorite.path = info.filePath
+        return db.pathFavoriteDao().insert(pathFavorite)
     }
 
     /**
      * 获取收藏列表
      */
-    fun getFavoritePath(): List<FileInfo> {
-        val sql = "select * from $TABLE_FAVORITE"
-        val cursor = dbHelper.readable().rawQuery(sql, null)
-        val index = cursor.getColumnIndex("path")
-        var paths = arrayListOf<FileInfo>()
-        while (cursor.moveToNext()) {
-            val info = FileInfo(File(cursor.getString(index)))
-            paths.add(info)
+    fun getAllPathFavorite(): List<FileInfo> {
+        return db.pathFavoriteDao().getAllPath().map {
+            FileInfo(File(it.path))
         }
-        return paths.toList()
     }
 }
