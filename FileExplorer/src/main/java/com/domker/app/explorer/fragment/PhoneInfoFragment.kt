@@ -8,12 +8,12 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.ListView
 import com.domker.app.explorer.R
 import com.domker.app.explorer.helper.PermissionHelper
 import com.domker.app.explorer.util.DrawableUtils
 import com.domker.app.explorer.util.PhoneInfo
 import com.domker.app.explorer.util.hideMenu
+import kotlinx.android.synthetic.main.fe_phone_info_layout.*
 
 
 /**
@@ -23,13 +23,11 @@ import com.domker.app.explorer.util.hideMenu
 class PhoneInfoFragment : BaseFragment() {
     private lateinit var mAdapter: ArrayAdapter<String>
     private val mData = ArrayList<String>()
-    private lateinit var mListView: ListView
     private lateinit var permissionHelper: PermissionHelper
 
     override fun init(context: Context, view: View) {
         activity.title = getString(R.string.fe_title_phone_info)
         mAdapter = ArrayAdapter(context, R.layout.fe_phone_info_item, mData)
-        mListView = view.findViewById(R.id.listView)
         permissionHelper = PermissionHelper(context)
     }
 
@@ -40,14 +38,14 @@ class PhoneInfoFragment : BaseFragment() {
     override fun onAssistButtonClick(view: View) {
         initData(activity)
         mAdapter.notifyDataSetChanged()
-        mListView.smoothScrollToPosition(0)
+        listView.smoothScrollToPosition(0)
     }
 
     override fun onShown(context: Context) {
         if (permissionHelper.check(Manifest.permission.READ_PHONE_STATE)) {
             initData(context)
         }
-        mListView.adapter = mAdapter
+        listView.adapter = mAdapter
     }
 
     override fun initLayoutId(): Int = R.layout.fe_phone_info_layout

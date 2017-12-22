@@ -4,10 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.TextView
-import android.widget.Toast
 import com.domker.app.explorer.R
 import com.domker.app.explorer.adapter.FileListAdapter
 import com.domker.app.explorer.adapter.ItemDivider
@@ -22,6 +19,7 @@ import com.domker.app.explorer.listener.OnItemClickListener
 import com.domker.app.explorer.util.DrawableUtils
 import com.domker.app.explorer.util.PhoneInfo
 import com.domker.app.explorer.view.FileRecyclerView
+import kotlinx.android.synthetic.main.fe_fragment_file_list.*
 import java.io.File
 
 /**
@@ -34,8 +32,6 @@ class FileListFragment : BaseFragment() {
         val KEY_IS_FAVORITE = "default_favorite"
     }
 
-    private lateinit var mTextViewPath: TextView
-    private lateinit var mRecyclerViewFileList: FileRecyclerView
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var mAdapter: FileListAdapter
     private lateinit var mFileLoader: FileLoader
@@ -52,7 +48,7 @@ class FileListFragment : BaseFragment() {
             mAdapter.setFileList(result)
             mAdapter.notifyDataSetChanged()
             // 还原位置
-            val position = mAdapter.getRecordPosition(mCurrentPath!!)
+            val position = mAdapter.getRecordPosition(mCurrentPath)
             mLayoutManager.scrollToPosition(position)
         }
     }
@@ -61,7 +57,7 @@ class FileListFragment : BaseFragment() {
         activity.title = "文件浏览"
         mSpHelper = SharedPreferencesHelper.getInstance(activity)
         mDbManager = DbManager(activity)
-        initViews(view)
+        initViews()
         initArguments()
         initAdapter()
         // 显示上次记录的目录
@@ -74,13 +70,11 @@ class FileListFragment : BaseFragment() {
         }
     }
 
-    private fun initViews(view: View) {
-        mRecyclerViewFileList = view.findViewById(R.id.recyclerViewFiles)
-        mTextViewPath = view.findViewById(R.id.textViewPath)
+    private fun initViews() {
         mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.isItemPrefetchEnabled = true
-        mRecyclerViewFileList.layoutManager = mLayoutManager
-        registerForContextMenu(mRecyclerViewFileList)
+        recyclerViewFiles.layoutManager = mLayoutManager
+        registerForContextMenu(recyclerViewFiles)
     }
 
     override fun initAssistButtonDrawable(context: Context): Drawable? {
@@ -88,7 +82,7 @@ class FileListFragment : BaseFragment() {
     }
 
     override fun onAssistButtonClick(view: View) {
-        mRecyclerViewFileList.smoothScrollToPosition(0)
+        recyclerViewFiles.smoothScrollToPosition(0)
     }
 
     override fun onShown(context: Context) {
@@ -163,8 +157,8 @@ class FileListFragment : BaseFragment() {
      */
     private fun initAdapter() {
         mAdapter = FileListAdapter(activity)
-        mRecyclerViewFileList.adapter = mAdapter
-        mRecyclerViewFileList.addItemDecoration(ItemDivider())
+        recyclerViewFiles.adapter = mAdapter
+        recyclerViewFiles.addItemDecoration(ItemDivider())
         mAdapter.itemClickListener = object: OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 val fileInfo = mAdapter.getFileInfoItem(position)
@@ -191,7 +185,7 @@ class FileListFragment : BaseFragment() {
             mAdapter.recordPosition(mCurrentPath!!, mLayoutManager)
         }
         mCurrentPath = path
-        mTextViewPath.text = path
+        textViewPath.text = path
         mFileLoader = FileLoader(mCallback)
         mFileLoader.fileSortType = settings.getFileSortType()
         mFileLoader.rootPath = mDefaultPath

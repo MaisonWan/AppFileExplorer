@@ -81,8 +81,8 @@ class FileListAdapter(val context: Context) : RecyclerView.Adapter<FileInfoViewH
     /**
      * 获取当前存储的位置
      */
-    fun getRecordPosition(path: String): Int {
-        return mPositionMap[path] ?: 0
+    fun getRecordPosition(path: String?): Int {
+        return if (path.isNullOrEmpty()) 0 else mPositionMap[path] ?: 0
     }
 }
 
